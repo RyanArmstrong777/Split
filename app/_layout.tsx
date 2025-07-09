@@ -1,29 +1,46 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { SQLiteProvider } from 'expo-sqlite';
+import runSeeder from '@/db/seeder';
+import { Tabs } from 'expo-router';
+import Navbar from '@/components/navbar';
+import { ThemeProvider } from '@/contexts/themeContext';
+import ThemedBackground from '@/components/themedBackground';
+import { SplitProvider } from '@/contexts/splitContext';
+import { AppSettingsProvider } from '@/contexts/appSettingsContext';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+function InnerApp() {
+  return (
+    <AppSettingsProvider>
+      <ThemeProvider>
+        <SplitProvider>
+          <ThemedBackground>
+            <Tabs screenOptions={{ headerShown: false, tabBarStyle: { display: 'none' } }}>
+              <Tabs.Screen name="index" options={{ title: 'Workout' }} />
+              <Tabs.Screen name="splits" options={{ title: 'Splits' }} />
+              <Tabs.Screen name="settings" options={{ title: 'Settings' }} />
+              <Tabs.Screen name="analytics" options={{ title: 'Analytics' }} />
+            </Tabs>
+            <Navbar />
+          </ThemedBackground>
+        </SplitProvider>
+      </ThemeProvider>
+    </AppSettingsProvider>
+  );
+}
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SQLiteProvider
+      databaseName="pushpump.db"
+      options={{ useNewConnection: false }}
+      onInit={async (db) => {
+        try {
+          await runSeeder(db);
+        } catch (e) {
+          console.error('Seeder failed:', e);
+        }
+      }}
+    >
+      <InnerApp />
+    </SQLiteProvider>
   );
 }
