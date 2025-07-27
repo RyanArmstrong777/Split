@@ -77,7 +77,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: spacing.md,
     justifyContent: "center",
-    paddingVertical: spacing.lg
   },
   calendarButton: {
     padding: spacing.xs,

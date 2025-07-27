@@ -172,9 +172,10 @@ const HeaderSlideshow = ({
                 </Text>
                 <Text
                   style={{
-                    fontSize: textSizes.title,
+                    fontSize: textSizes.xl,
                     color: theme.text,
                     fontWeight: textWeights.bold,
+                    textAlign: "center"
                   }}
                 >
                   {selectedWorkout?.name ?? "Rest day"}

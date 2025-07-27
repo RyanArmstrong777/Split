@@ -74,8 +74,13 @@ export type BodyMetrics = {
     BMI: number
 }
 
+export type CompletedExerciseWithDate = CompletedExercise & {
+    startDate: string;
+    volume: number
+};
+
 export type CalendarProps = {
-  selectedDate: string
+  selectedDate: string | null
   setSelectedDate: (date: string) => void
   theme: Theme
   style?: ViewStyle
@@ -103,3 +108,22 @@ export type Theme = {
     notification: string,
     accent: string
 }
+
+export type ChartData = {
+    labels: string[]
+    datasets: {
+        data: number[]
+    }[]
+}
+
+export type ShopProduct = {
+    id: number;
+    title: string;
+    description: string;
+    focus: string;
+    difficulty: string;
+    price: number;
+    sale_price?: number;
+    seeder: string;
+    purchased: number;
+};

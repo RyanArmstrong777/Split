@@ -16,7 +16,7 @@ const { width, height } = Dimensions.get("window");
 export default function Splits() {
 
     const { theme } = useThemeContext();
-    const { splits, split, setRefreshSplits } = useSplitContext();
+    const { splits, setRefreshSplits } = useSplitContext();
     
     const db = useSQLiteContext();
 
@@ -36,10 +36,7 @@ export default function Splits() {
 
     return (
         <SafeAreaView style={[styles.background, { backgroundColor: theme.background }]}>
-            <View style={styles.header}>
-                <Text style={[{fontSize: textSizes.sm, fontWeight: textWeights.regular, color: theme.text}]}>Active split</Text>
-                <Text style={[{fontSize: textSizes.title, fontWeight: textWeights.bold, color: theme.text, textAlign: "center"}]} numberOfLines={2} lineBreakMode="tail">{split?.name}</Text>
-            </View>
+            <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, padding: spacing.lg * 2, paddingBottom: 0}}>Planner</Text>
             <ScrollView ref={scrollRef} style={{flex: 1}} showsHorizontalScrollIndicator={false} scrollEnabled={false} pagingEnabled horizontal>
 
                 <SplitsDisplay theme={theme} splits={splits} goToPage={goToPage} setSelectedSplit={setSelectedSplit} setIsEditing={setIsEditing} />
@@ -61,13 +58,6 @@ const styles = StyleSheet.create({
         height: height - 110,
         gap: spacing.lg,
         flex: 1,
-    },
-    header: {
-        alignItems: "center",
-        justifyContent: "center",
-        marginTop: spacing.lg,
-        height: height * .1,
-        paddingHorizontal: spacing.lg
     },
     scrollPage: {
         width,

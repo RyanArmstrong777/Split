@@ -154,7 +154,7 @@ const SetDetails = ({
                 <Text style={[styles.setNumberText, { color: theme.text }]}>Set {selectedSet?.order}</Text>
             </RecordButton>
 
-            <ScrollView style={styles.exercisesContainer} showsVerticalScrollIndicator={false}>
+            <ScrollView contentContainerStyle={styles.exercisesContainer} showsVerticalScrollIndicator={false}>
     
                 <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
                     <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "25%", paddingVertical: spacing.md + spacing.sm }]}>Weight / {weightUnits}:</Text>
@@ -197,41 +197,42 @@ const SetDetails = ({
 
             </ScrollView>
 
-            <View style={[styles.submitButtonContainer, { display: selectedSet?.completed ? "none" : "flex" }]}>
-                <SubmitButton
-                    text={'Mark as complete'}
-                    theme={theme}
-                    onPress={() => handleCompleteSet()}
-                />
-            </View>
+            {selectedSet?.completed !== 1 && (
+                <View style={{paddingVertical: spacing.lg}}>
+                    <SubmitButton
+                        text={'Mark as complete'}
+                        theme={theme}
+                        onPress={handleCompleteSet}
+                    />
+                </View>
+                
+            )}
+            
         </View>
     );
 };
 
 const styles = {
-  pageView: {
-    flex: 1,
-    width,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md
-  },
-  exercisesContainer: {
-    flex: 1,
-  },
-  exerciseNameText: {
-    fontSize: textSizes.sm,
-    fontWeight: textWeights.bold
-  },
-  setNumberText: {
-    fontSize: textSizes.sm,
-    fontWeight: textWeights.regular,
-  },
-  labelText: {
-    paddingVertical: spacing.md
-  },
-  submitButtonContainer: {
-    borderBottomWidth: 0,
-  },
+    pageView: {
+        flex: 1,
+        width,
+        padding: spacing.lg,
+        paddingBottom: 0,
+    },
+    exercisesContainer: {
+        flex: 0,
+    },
+    exerciseNameText: {
+        fontSize: textSizes.sm,
+        fontWeight: textWeights.bold
+    },
+    setNumberText: {
+        fontSize: textSizes.sm,
+        fontWeight: textWeights.regular,
+    },
+    labelText: {
+        paddingVertical: spacing.md
+    },
 };
 
 export default SetDetails;

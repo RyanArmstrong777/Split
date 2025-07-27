@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Dimensions, Switch, ScrollView } from "react-native";
+import { View, Text, Pressable, Dimensions, Switch, ScrollView, Vibration } from "react-native";
 import RecordButton from "@/components/buttons/recordButton";
 import DefaultInput from "@/components/inputs/defaultInput";
 import SubmitButton from "@/components/buttons/submitButton";

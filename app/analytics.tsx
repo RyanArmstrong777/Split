@@ -1,83 +1,327 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, Dimensions, SafeAreaView, Text, View, Pressable, ScrollView } from "react-native";
+import { useEffect, useState, useCallback, useMemo, useRef, RefObject } from "react";
+import { StyleSheet, Dimensions, SafeAreaView, Text, View, Pressable, ScrollView, Vibration } from "react-native";
 import { useThemeContext } from "@/contexts/themeContext";
 import { spacing } from "../constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
 import RecordButton from "@/components/buttons/recordButton";
-import Chart from "@/components/analytics/chart";
-import { retrieveBodyMetricsHistory } from "@/db/queries/body_metrics/retrieveBodyMetricsHistory";
-import { BodyMetrics } from "@/constants/types";
 import { useSQLiteContext } from "expo-sqlite";
+import { LineChart } from "react-native-chart-kit"
+import SubmitButton from "@/components/buttons/submitButton";
+import { Dumbbell, Pencil, ChevronLeft, ChevronRight } from "lucide-react-native";
+import { BodyMetrics, ChartData, CompletedExerciseWithDate } from "@/constants/types";
+import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import { retrieveBodyMetricsHistory } from "@/db/queries/body_metrics/retrieveBodyMetricsHistory";
+import { formatBodyMetricsChartData } from "@/utilities/formatBodyMetricsChartData";
+import { getLastMonday } from "@/utilities/getLastMonday";
+import { useFocusEffect } from '@react-navigation/native';
+import { getCompletedExercisesWithStartDate } from "@/db/queries/completed_exercises/getCompletedExercisesWithStartDate";
+import { formatExercisesChartData } from "@/utilities/formatExercisesChartData";
+import DefaultInput from "@/components/inputs/defaultInput";
+import { saveBodymetrics } from "@/db/queries/body_metrics/saveBodymetrics";
 
 const { width, height } = Dimensions.get("window");
 
 export default function AnalyticsScreen() {
 
     const { theme } = useThemeContext()
-
+    const { settings } = useAppSettingsContext()
     const db = useSQLiteContext()
 
-    const [timeframe, setTimeframe] = useState("Week")
+    const [timeframe, setTimeframe] = useState<"Week" | "Month" | "Year">("Week")
+    const [startDate, setStartDate] = useState(getLastMonday())
+    const [refreshMetrics, setRefreshmetrics] = useState(false)
 
-    const [bodyMetricsHistory, setBodyMetricsHistory] = useState<BodyMetrics[] | null>(null)
-    const [refreshBodyMetrics, setRefreshBodyMetrics] = useState(true)
+    const [metric, setMetric] = useState<"Weight" | "BF%" | "BMI">("Weight")
+    const [bodyMetricsHistory, setBodymetricsHistory] = useState<BodyMetrics[] | null>()
 
-    async function getBodyMetricstHistory() {
-        const history = await retrieveBodyMetricsHistory(db)
-        console.log(history)
-        setBodyMetricsHistory(history)
+    const mainRef = useRef<ScrollView>(null)
+    const editRef = useRef<ScrollView>(null)
+
+    const [showBodyMetrics, setShowBodyMetrics] = useState(false)
+    const [showExercises, setShowExercises] = useState(false)
+
+    function viewPage(value: boolean) {
+        editRef.current?.scrollTo({x: value ? width : 0})
     }
 
+    function getChartLabels() {
+        if (timeframe === "Week") {
+            return ["M", "T", "W", "T", "F", "S", "S"]
+        } else if (timeframe === "Month") {
+            return ["WK1", "WK2", "WK3", "WK4"]
+        }
+        return ['J', 'F', 'M', 'A', 'M', 'J','J', 'A', 'S', 'O', 'N', 'D']
+    }
+
+    async function getBodyMetricsHistory() {
+        const result = await retrieveBodyMetricsHistory(db)
+        setBodymetricsHistory(result)
+        if (result?.at(-1)?.weight) {
+            setNewBodyWeight(result?.at(-1)?.weight.toString() ?? "")
+        }
+        if (result?.at(-1)?.bodyFatPercentage) {
+            setNewBodyFatPercentage(result?.at(-1)?.bodyFatPercentage.toString() ?? "")
+        }
+        if (result?.at(-1)?.BMI) {
+            setNewBMI(result?.at(-1)?.BMI.toString() ?? "")
+        }
+    }
+
+    const [newBodyWeight, setNewBodyWeight] = useState("")
+    const [newBodyFatPercentage, setNewBodyFatPercentage] = useState("")
+    const [newBMI, setNewBMI] = useState("")
+
+    const [BodyMetricsChartData, setBodyMetricsChartData] = useState<ChartData>({labels: getChartLabels(), datasets: []})
+
     useEffect(() => {
-        getBodyMetricstHistory()
-    }, [refreshBodyMetrics])
+        if (bodyMetricsHistory) {
+            setBodyMetricsChartData({
+                labels: getChartLabels(),
+                datasets:  [{ data: 
+                    formatBodyMetricsChartData(
+                        bodyMetricsHistory,
+                        getLastMonday(),
+                        timeframe,
+                        metric
+                    ).map(data => metric === "Weight" ? data.weight : metric === "BF%" ? data.bodyFatPercentage : data.BMI)
+                }]
+            })
+        }
+    }, [bodyMetricsHistory, timeframe, metric])
+
+    useEffect(() => {
+        getBodyMetricsHistory()
+    }, [timeframe, startDate, refreshMetrics])
+
+    async function saveBodyMetricsData() {
+        await saveBodymetrics(db, {weight: parseInt(newBodyWeight, 10), bodyFatPercentage: parseInt(newBodyFatPercentage, 10), BMI: parseInt(newBMI, 10)})
+        Vibration.vibrate(200)
+        setRefreshmetrics(prev => !prev)
+        viewPage(false)
+    }
+
+    const [exercisesHistory, setExercisesHistory] = useState<CompletedExerciseWithDate[]>([])
+    const [exercisesChartData, setExercisesChartData] = useState<{chartData: ChartData, volume: number}>({chartData: {labels: getChartLabels(), datasets: []}, volume: 0})
+    const [selectedExercise, setSelectedExercise] = useState<string | null>(null)
+
+    const exerciseNames = useMemo(() => {
+        return [...new Set(exercisesHistory.map(ex => ex.name))];
+    }, [exercisesHistory]);
+
+    useFocusEffect(
+        useCallback(() => {
+            (async () => {
+                const data = await getCompletedExercisesWithStartDate(db);
+                setExercisesHistory(data)
+                setSelectedExercise(data[0].name)
+            })()   
+        }, [])
+    )
+
+    useEffect(() => {
+        if (selectedExercise) {
+            const data = formatExercisesChartData(
+                exercisesHistory,
+                startDate,
+                timeframe,
+                selectedExercise
+            );
+
+            setExercisesChartData({chartData: {
+                labels: getChartLabels(),
+                datasets: [{ data: data.chartValues }]
+            }, volume: data.totalVolume});
+        }
+    }, [timeframe, startDate, selectedExercise, exercisesHistory]);
     
     return (
-        <SafeAreaView style={[styles.background, { backgroundColor: theme.background }]}>
-            <View style={styles.container}>
-                <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingHorizontal: spacing.lg, paddingTop: spacing.lg}}>Analytics</Text>
-                <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm}} horizontal showsHorizontalScrollIndicator={false}>
-                    <Pressable style={[styles.timeframe, {backgroundColor: theme.card}]}>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>All time</Text>
-                    </Pressable>
-                    <Pressable style={[styles.timeframe, {backgroundColor: theme.card}]}>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>Week</Text>
-                    </Pressable>
-                    <Pressable style={[styles.timeframe, {backgroundColor: theme.card}]}>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>Month</Text>
-                    </Pressable>
-                    <Pressable style={[styles.timeframe, {backgroundColor: theme.card}]}>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>Year</Text>
-                    </Pressable>
-                </ScrollView>
-            </View>
-            <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-                <RecordButton theme={theme} style={styles.section}>
-                    <Text style={{fontSize: textSizes.md, color: theme.text, fontWeight: textWeights.bold}}>Body metrics</Text>
-                    <View style={{flexDirection: "row", gap: spacing.md}}>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>83kg</Text>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>7% BF</Text>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>BMI 20</Text>
+        <View style={{ backgroundColor: theme.background, flex: 1 }}>
+            <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={editRef} scrollEnabled={false}>
+                <View style={{flex: 1}}>
+                    <View style={[styles.container, {paddingHorizontal: spacing.lg * 2, flex: 0}]}>
+                        <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>Analytics</Text>
+                        <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm, paddingBottom: spacing.lg}} horizontal showsHorizontalScrollIndicator={false}>
+                            <Pressable style={[styles.timeframe, {backgroundColor: timeframe === "Week" ? theme.text : theme.card}]} onPress={() => setTimeframe("Week")}>
+                                <Text style={{fontSize: textSizes.sm, color: timeframe === "Week" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Week</Text>
+                            </Pressable>
+                            <Pressable style={[styles.timeframe, {backgroundColor: timeframe === "Month" ? theme.text : theme.card}]} onPress={() => setTimeframe("Month")}>
+                                <Text style={{fontSize: textSizes.sm, color: timeframe === "Month" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Month</Text>
+                            </Pressable>
+                            <Pressable style={[styles.timeframe, {backgroundColor: timeframe === "Year" ? theme.text : theme.card}]} onPress={() => setTimeframe("Year")}>
+                                <Text style={{fontSize: textSizes.sm, color: timeframe === "Year" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Year</Text>
+                            </Pressable>
+                        </ScrollView>
                     </View>
-                    <ScrollView style={styles.chartWrapper} horizontal>
-                        <Chart theme={theme} data={ bodyMetricsHistory?.map(metric => ({ x: metric.date, y: metric.weight })) ?? []} xKey={"x"} yKey={"y"} xTitle={"Time"} yTitle={"Body Weight"} timeframe={timeframe} />
-                        <Chart theme={theme} data={ bodyMetricsHistory?.map(metric => ({ x: metric.date, y: metric.weight })) ?? []} xKey={"x"} yKey={"y"} xTitle={"Time"} yTitle={"Body Fat %"} timeframe={timeframe} />
-                        <Chart theme={theme} data={ bodyMetricsHistory?.map(metric => ({ x: metric.date, y: metric.weight })) ?? []} xKey={"x"} yKey={"y"} xTitle={"Time"} yTitle={"BMI"} timeframe={timeframe} />
+
+                    <ScrollView style={{flex: 1, gap: spacing.lg}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: spacing.lg}} ref={mainRef}>
+                        
+                        <View style={{width}}>
+                            <View style={[styles.container, {paddingTop: 0}]}>
+                                <RecordButton theme={theme} style={styles.section}>
+                                    <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light}}>Body metrics</Text>
+                                    <Text style={{fontSize: textSizes.md, color: theme.text, fontWeight: textWeights.bold, marginBottom: spacing.sm}}>
+                                        {metric === "Weight" && bodyMetricsHistory?.at(-1)?.weight != null
+                                        ? `${bodyMetricsHistory?.at(-1)?.weight}${settings?.weightUnit === "kg" ? "kg" : "lbs"}`
+                                        : metric === "BF%" && bodyMetricsHistory?.at(-1)?.bodyFatPercentage != null
+                                        ? `${bodyMetricsHistory?.at(-1)?.bodyFatPercentage}%`
+                                        : metric === "BMI" && bodyMetricsHistory?.at(-1)?.BMI != null
+                                        ? bodyMetricsHistory?.at(-1)?.BMI.toFixed(1)
+                                        : "N/A"}
+                                    </Text>
+                                    <View style={{flexDirection: "row", gap: spacing.sm}}>
+                                        <Pressable style={[styles.timeframe, {backgroundColor: metric === "Weight" ? theme.text : theme.card}]} onPress={() => setMetric("Weight")}>
+                                            <Text style={{fontSize: textSizes.sm, color: metric === "Weight" ? theme.background : theme.text, fontWeight: textWeights.regular}} numberOfLines={1}>Weight</Text>
+                                        </Pressable>
+                                        <Pressable style={[styles.timeframe, {backgroundColor: metric === "BF%" ? theme.text : theme.card}]} onPress={() => setMetric("BF%")}>
+                                            <Text style={{fontSize: textSizes.sm, color: metric === "BF%" ? theme.background : theme.text, fontWeight: textWeights.regular}} numberOfLines={1}>% BF</Text>
+                                        </Pressable>
+                                        <Pressable style={[styles.timeframe, {backgroundColor: metric === "BMI" ? theme.text : theme.card}]} onPress={() => setMetric("BMI")}>
+                                            <Text style={{fontSize: textSizes.sm, color: metric === "BMI" ? theme.background : theme.text, fontWeight: textWeights.regular}} numberOfLines={1}>BMI</Text>
+                                        </Pressable>
+                                    </View>
+                                </RecordButton>
+                            </View>
+                            <LineChart data={BodyMetricsChartData} width={width - spacing.lg * 2} height={height * .3} withVerticalLines={false} withDots={false} bezier style={{marginTop: spacing.md}} fromZero
+                                chartConfig={{color: () => theme.text,
+                                backgroundGradientFrom: theme.background,
+                                backgroundGradientTo: theme.background,
+                                decimalPlaces: 0,
+                                propsForBackgroundLines: {
+                                    strokeDashArray: undefined
+                            }}}/>
+                            <View style={{paddingHorizontal: spacing.lg}}>
+                                <SubmitButton theme={theme} onPress={() => { viewPage(true); setShowBodyMetrics(true); setShowExercises(false) }}>
+                                    <Pencil size={textSizes.sm} color={theme.background}/>
+                                    <Text style={{fontSize: textSizes.sm, color: theme.background}}>Update records</Text>
+                                </SubmitButton>
+                            </View>
+                        </View>
+
+                        <View style={{width}}>
+                            <View style={styles.container}>
+                                <RecordButton theme={theme} style={styles.section}>
+                                    <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light}}>{selectedExercise} volume</Text>
+                                    <Text style={{fontSize: textSizes.md, color: theme.text, fontWeight: textWeights.regular, marginBottom: spacing.sm}}>
+                                        {exercisesChartData.volume && exercisesChartData?.volume > 0 ? `${exercisesChartData?.volume} ${settings?.weightUnit}` : 'N/A'}
+                                    </Text>
+                                </RecordButton>
+                            </View>
+                            <LineChart data={exercisesChartData.chartData} width={width - spacing.lg * 2} height={height * .3} withVerticalLines={false} withDots={false} bezier style={{marginTop: spacing.md}} fromZero
+                                chartConfig={{color: () => theme.text, 
+                                backgroundGradientFrom: theme.background,
+                                backgroundGradientTo: theme.background,
+                                decimalPlaces: 0,
+                                propsForBackgroundLines: {
+                                    strokeDashArray: undefined
+                            }}}/>
+                            <View style={{paddingHorizontal: spacing.lg}}>
+                                <SubmitButton theme={theme} onPress={() => { viewPage(true); setShowBodyMetrics(false); setShowExercises(true) }}>
+                                    <Dumbbell size={textSizes.sm} color={theme.background}/>
+                                    <Text style={{fontSize: textSizes.sm, color: theme.background}}>Change exercise</Text>
+                                </SubmitButton>
+                            </View>
+                        </View>
+
                     </ScrollView>
-                </RecordButton>   
+                </View>
+
+                <View style={{width, display: showExercises ? "flex" : "none"}}>
+                    <View style={styles.container}>
+                        <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingHorizontal: spacing.lg, paddingTop: spacing.lg}}>Exercises</Text>
+                        <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
+                            <Pressable style={{paddingVertical: spacing.md}} onPress={() => viewPage(false)}>
+                                <ChevronLeft size={textSizes.md} color={theme.text} />
+                            </Pressable>
+                            <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold}}>Select exercise</Text>
+                        </RecordButton>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            {exerciseNames.map((exercise) => (
+                                <RecordButton key={exercise} theme={theme} style={{paddingVertical: spacing.md, paddingHorizontal: spacing.lg}} onPress={() => { setSelectedExercise(exercise); viewPage(false) }}>
+                                    <Text
+                                        style={{
+                                            fontSize: textSizes.sm,
+                                            color: theme.text,
+                                            fontWeight: textWeights.regular,
+                                            marginRight: "auto"
+                                        }}
+                                    >
+                                        {exercise}
+                                    </Text>
+                                    <ChevronRight size={textSizes.md} color={theme.text}/>
+                                </RecordButton>
+                            ))}
+                        </ScrollView>
+                    </View>
+                </View>
+
+                <View style={{width, display: showBodyMetrics ? "flex" : "none", flex: 1}}>
+                    <View style={styles.container}>
+                        <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingHorizontal: spacing.lg, paddingTop: spacing.lg}}>Body metrics</Text>
+                        <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
+                            <Pressable style={{paddingVertical: spacing.md}} onPress={() => viewPage(false)}>
+                                <ChevronLeft size={textSizes.md} color={theme.text} />
+                            </Pressable>
+                            <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold}}>Update records</Text>
+                        </RecordButton>
+                        <View style={{paddingHorizontal: spacing.lg, flex: 1}}>
+                            <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
+                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "50%", paddingVertical: spacing.md + spacing.sm  }}>
+                                    {`Body Weight / ${settings?.weightUnit}: `}
+                                </Text>
+                                <DefaultInput
+                                    theme={theme}
+                                    placeholder={bodyMetricsHistory?.at(-1)?.weight != null ? `e.g. ${bodyMetricsHistory.at(-1)?.weight}` : "Enter weight..."}
+                                    value={newBodyWeight}
+                                    onChangeText={setNewBodyWeight}
+                                    keyboardType="numeric"
+                                />
+
+                            </RecordButton>
+
+                            <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
+                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "50%", paddingVertical: spacing.md + spacing.sm }}>
+                                    Body Fat %:
+                                </Text>
+                                <DefaultInput
+                                    theme={theme}
+                                    placeholder={bodyMetricsHistory?.at(-1)?.bodyFatPercentage != null ? `e.g. ${bodyMetricsHistory.at(-1)?.bodyFatPercentage}` : "Enter BF%..."}
+                                    value={newBodyFatPercentage}
+                                    onChangeText={setNewBodyFatPercentage}
+                                    keyboardType="numeric"
+                                />
+
+                            </RecordButton>
+
+                            <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
+                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "50%", paddingVertical: spacing.md + spacing.sm }}>
+                                    BMI:
+                                </Text>
+                                <DefaultInput
+                                    theme={theme}
+                                    placeholder={bodyMetricsHistory?.at(-1)?.BMI != null ? `e.g. ${bodyMetricsHistory.at(-1)?.BMI}` : "Enter BMI..."}
+                                    value={newBMI}
+                                    onChangeText={setNewBMI}
+                                    keyboardType="numeric"
+                                />
+                            </RecordButton>
+
+                            
+                        </View>
+                        <SubmitButton theme={theme} onPress={() => saveBodyMetricsData()} style={{marginTop: "auto", marginBottom: spacing.lg}} text={"Save changes"} />
+                    </View>
+                </View>
+
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
-    background: {
-        width,
-        height: height - 110,
-    },
     container: {
-        padding: spacing.lg,
-        gap: spacing.md
+        paddingHorizontal: spacing.lg,
+        paddingTop: spacing.lg,
+        gap: spacing.sm,
+        flex: 1
     },
     timeframeContainer: {
         flexDirection: "row"
@@ -91,7 +335,6 @@ const styles = StyleSheet.create({
     },
     section: {
         padding: spacing.lg,
-        backgroundColor: "red",
         flexDirection: "column",
         alignItems: "flex-start",
         gap: spacing.sm

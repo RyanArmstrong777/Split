@@ -42,11 +42,9 @@ const ScheduleEditor = ({
 
     const [selectedDate, setSelectedDate] = useState(getLastMonday())
 
-    const [workouts, setWorkouts] = useState([] as Workout[])
     const [selectedWorkout, setSelectedWorkout] = useState({} as Workout);
     const [refreshWorkouts, setRefreshWorkouts] = useState(true)
 
-    const [exercises, setExercises] = useState([] as Exercise[])
     const [selectedExercise, setSelectedExercise] = useState({} as Exercise)
     const [refreshExercises, setRefreshExercises] = useState(true)
 
@@ -110,14 +108,14 @@ const ScheduleEditor = ({
                 </Text>
             </RecordButton>
 
-            <RecordButton theme={theme} style={{justifyContent: "center", borderBottomWidth: 0}}>
+            <RecordButton theme={theme} style={{justifyContent: "center", borderBottomWidth: 0, paddingTop: spacing.md}}>
                 <WeeklyCalendar theme={theme} selectedDate={selectedDate} setSelectedDate={setSelectedDate} goToSection={goToSection} />
             </RecordButton>
 
-            <ScrollView horizontal pagingEnabled scrollEnabled={false} ref={scrollRef} style={{marginVertical: spacing.lg}}>
-                <WorkoutSelector goToSection={goToSection} selectedDate={selectedDate} selectedSplit={selectedSplit} refreshWorkouts={refreshWorkouts} setRefreshWorkouts={setRefreshWorkouts} workouts={workouts} setWorkouts={setWorkouts} theme={theme} setSelectedWorkout={setSelectedWorkout} ref={workoutSelectorRef} db={db} />
+            <ScrollView horizontal pagingEnabled scrollEnabled={false} ref={scrollRef} style={{marginTop: spacing.lg}}>
+                <WorkoutSelector goToSection={goToSection} selectedDate={selectedDate} selectedSplit={selectedSplit} refreshWorkouts={refreshWorkouts} setRefreshWorkouts={setRefreshWorkouts} theme={theme} setSelectedWorkout={setSelectedWorkout} ref={workoutSelectorRef} db={db} />
 
-                <ExerciseSelector goToSection={goToSection} theme={theme} exercises={exercises} setExercises={setExercises} refreshWorkouts={refreshWorkouts} setRefreshWorkouts={setRefreshWorkouts} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} selectedWorkout={selectedWorkout} setSelectedExercise={setSelectedExercise} db={db} />
+                <ExerciseSelector goToSection={goToSection} theme={theme} refreshWorkouts={refreshWorkouts} setRefreshWorkouts={setRefreshWorkouts} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} selectedWorkout={selectedWorkout} setSelectedExercise={setSelectedExercise} db={db} />
 
                 <SetSelector goToSection={goToSection} theme={theme} sets={sets} weightUnits={settings?.weightUnit} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} selectedExercise={selectedExercise} setSelectedSet={setSelectedSet} db={db} />
 

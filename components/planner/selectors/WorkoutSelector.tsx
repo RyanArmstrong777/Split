@@ -1,5 +1,5 @@
 import React, { useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
-import { ScrollView, Text, Dimensions, View, Pressable } from "react-native";
+import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
 import { Plus, ChevronRight, ChevronLeft, Copy, ClipboardPaste, Check } from "lucide-react-native";
 import RecordButton from "../../buttons/recordButton";
 import { textSizes, textWeights } from "@/constants/text";
@@ -20,9 +20,7 @@ type props = {
     selectedDate: string
     selectedSplit: Split
     refreshWorkouts: boolean
-    workouts: Workout[]
     setRefreshWorkouts: React.Dispatch<React.SetStateAction<boolean>>
-    setWorkouts: (schedules: Workout[]) => void
     setSelectedWorkout: (workout: Workout) => void
     goToSection: (section: number) => void
     theme: any
@@ -36,8 +34,6 @@ const WorkoutSelector = forwardRef(({
     selectedSplit,
     refreshWorkouts,
     setRefreshWorkouts,
-    workouts,
-    setWorkouts,
     setSelectedWorkout,
     goToSection,
     theme,
@@ -46,7 +42,11 @@ const WorkoutSelector = forwardRef(({
     const scrollRef = useRef<ScrollView>(null)
     const workoutsRef = useRef<ScrollView>(null)
 
+    const { settings } = useAppSettingsContext()
+
     const { refreshKey } = useAppSettingsContext()
+
+    const [workouts, setWorkouts] = useState([] as Workout[])
 
     const [newWorkoutName, setNewWorkoutName] = useState("")
 
@@ -74,6 +74,9 @@ const WorkoutSelector = forwardRef(({
 
     async function handleCreateWorkout() {
         await createWorkout({db: db, name: newWorkoutName, splitId: selectedSplit.id, day: getDateAsDayNumber(selectedDate)})
+        if (settings?.vibrationFeedback === 1) {
+            Vibration.vibrate(200)
+        }
         setRefreshWorkouts(!refreshWorkouts)
         viewAddWorkout(false)
         setNewWorkoutName("")
@@ -90,6 +93,9 @@ const WorkoutSelector = forwardRef(({
     async function handlePasteWorkout() {
         if (clipboard) {
             await pasteWorkout(db, clipboard.id, selectedSplit.id, getDateAsDayNumber(selectedDate))
+            if (settings?.vibrationFeedback === 1) {
+                Vibration.vibrate(200)
+            }
             setIsPastingWorkout(true)
             setRefreshWorkouts(prev => !prev);
             setTimeout(() => {

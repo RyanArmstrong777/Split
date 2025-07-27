@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { ScrollView, Text, Dimensions, View, Pressable } from "react-native";
+import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
 import { ChevronRight, Plus, ChevronLeft, Trash2, Copy, ClipboardPaste, Check } from "lucide-react-native";
 import RecordButton from "../../buttons/recordButton";
 import { textSizes, textWeights } from "@/constants/text";
@@ -13,6 +13,7 @@ import { deleteWorkout } from "@/db/queries/workouts/deleteWorkout";
 import { getExercisesByWorkoutId } from "@/db/queries/exercises/getExercisesByWorkoutId";
 import { pasteExercise } from "@/db/queries/exercises/pasteExercise";
 import { updateWorkoutName } from "@/db/queries/workouts/updateWorkoutName";
+import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 
 type ExerciseSelectorProps = {
     theme: any
@@ -20,8 +21,6 @@ type ExerciseSelectorProps = {
     goToSection: (section: number) => void
     refreshWorkouts: boolean
     setRefreshWorkouts: React.Dispatch<React.SetStateAction<boolean>>
-    exercises: Exercise[]
-    setExercises: (exercises: Exercise[]) => void
     refreshExercises: boolean
     setRefreshExercises: React.Dispatch<React.SetStateAction<boolean>>
     selectedWorkout: Workout
@@ -36,8 +35,6 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
     goToSection,
     refreshWorkouts,
     setRefreshWorkouts,
-    exercises,
-    setExercises,
     refreshExercises,
     setRefreshExercises,
     selectedWorkout,
@@ -49,8 +46,12 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
         goToSection(2)
     }
 
+    const { settings } = useAppSettingsContext()
+
     const scrollRef = useRef<ScrollView>(null)
     const exercisesRef = useRef<ScrollView>(null)
+
+    const [exercises, setExercises] = useState([] as Exercise[])
 
     const [clipboard, setClipboard] = useState<Exercise | null>(null)
     const [copiedExerciseId, setCopiedExerciseId] = useState<number | null>(null)
@@ -85,7 +86,6 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
         getExercises()
         setWorkoutName(selectedWorkout.name)
-        goToSection(1)
 
     }, [selectedWorkout, refreshExercises])
 
@@ -105,6 +105,9 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
         if (clipboard) {
             setIsPasting(true)
             await pasteExercise(db, clipboard.id, selectedWorkout.id)
+            if (settings?.vibrationFeedback === 1) {
+                Vibration.vibrate(200)
+            }
             setRefreshExercises(prev => !prev)
             exercisesRef.current?.scrollToEnd({animated: true})
             setTimeout(() => {
@@ -115,13 +118,20 @@ const ExerciseSelector: React.FC<ExerciseSelectorProps> = ({
 
     async function handleCreateExercise() {
         await createExercise(db, selectedWorkout.id, newExerciseName, parseInt(newRestInterval, 10))
-        setRefreshExercises(!refreshExercises)
+        if (settings?.vibrationFeedback === 1) {
+            Vibration.vibrate(200)
+        }
+        setRefreshExercises(prev => !prev)
         viewAddExercise(false)
+        goToSection(1)
         resetInput()
     }
 
     async function handleDeleteWorkout() {
         await deleteWorkout(db, selectedWorkout.id)
+        if (settings?.vibrationFeedback === 1) {
+            Vibration.vibrate(200)
+        }
         setRefreshWorkouts(!refreshWorkouts)
     }
 

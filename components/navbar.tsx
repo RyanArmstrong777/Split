@@ -1,77 +1,119 @@
 import React, { useState, useEffect } from 'react';
 import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
-import { House, NotebookPen, Dumbbell, ChartNoAxesColumnIncreasing, Settings } from 'lucide-react-native';
+import { ShoppingBag, NotebookPen, Dumbbell, ChartNoAxesColumnIncreasing, Settings } from 'lucide-react-native';
 import { textSizes } from '../constants/text';
 import { spacing } from '../constants/spacing';
 import { useThemeContext } from '@/contexts/themeContext';
 import { darkTheme } from '../constants/colors';
 import { router } from 'expo-router';
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 export default function Navbar() {
+    const { theme, changeTheme } = useThemeContext();
+    const [activeTab, setActiveTab] = useState<"shop" | "splits" | "" | "analytics" | "settings">("");
 
-    const { theme, changeTheme } = useThemeContext()
-
-    const [activeTab, setActiveTab] = useState<"splits" | "" | "analytics" | "settings">("")
-  
     const handleThemeToggle = () => {
         const newTheme = theme === darkTheme ? 'light' : 'dark';
         changeTheme(newTheme);
     };
 
     useEffect(() => {
-        router.replace(`/${activeTab}`)
-    }, [activeTab])
+        if (activeTab !== null) {
+            router.replace(`/${activeTab}`);
+        }
+    }, [activeTab]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.background }]}>
-            <Pressable style={[styles.iconWrapper, { aspectRatio: 1, backgroundColor: theme.background, borderWidth: 0}, styles.borderRadius, styles.shadow, {shadowColor: theme.text}]} onPress={() => handleThemeToggle()}>
-                <House size={textSizes.lg} color={theme.text}></House>
+            <Pressable
+                style={[
+                    styles.button,
+                    styles.outerButton,
+                    { shadowColor: theme.text, backgroundColor: theme.background }
+                ]}
+                onPress={() => setActiveTab("shop")}
+            >
+                <ShoppingBag size={textSizes.lg} color={theme.text} />
             </Pressable>
-            <View style={[styles.midSection, styles.borderRadius, styles.shadow, {shadowColor: theme.text, backgroundColor: theme.background}]}>
-                <Pressable style={[styles.iconWrapper, { aspectRatio: 1, backgroundColor: theme.background  }, styles.borderRadius]} onPress={() => setActiveTab("splits")}>
+
+            <View style={[
+                styles.middleContainer,
+                styles.outerButton,
+                { backgroundColor: theme.background, shadowColor: theme.text }
+            ]}>
+                <Pressable
+                    style={[styles.button, { backgroundColor: theme.background }]}
+                    onPress={() => setActiveTab("splits")}
+                >
                     <NotebookPen size={textSizes.lg} color={theme.text} />
                 </Pressable>
-                <Pressable style={[styles.iconWrapper, { aspectRatio: 1, backgroundColor: theme.background, marginHorizontal: "auto" }, styles.borderRadius]} onPress={() => setActiveTab("")}>
+
+                <Pressable
+                    style={[styles.button, { backgroundColor: theme.background }]}
+                    onPress={() => setActiveTab("")}
+                >
                     <Dumbbell size={textSizes.lg} color={theme.text} />
                 </Pressable>
-                <Pressable style={[styles.iconWrapper, { aspectRatio: 1, backgroundColor: theme.background }, styles.borderRadius ]} onPress={() => setActiveTab("analytics")}>
+
+                <Pressable
+                    style={[styles.button, { backgroundColor: theme.background }]}
+                    onPress={() => setActiveTab("analytics")}
+                >
                     <ChartNoAxesColumnIncreasing size={textSizes.lg} color={theme.text} />
                 </Pressable>
             </View>
-            <Pressable style={[styles.iconWrapper, { aspectRatio: 1, backgroundColor: theme.background }, styles.borderRadius, styles.shadow, {shadowColor: theme.text}]} onPress={() => setActiveTab("settings")}>
+
+            <Pressable
+                style={[
+                    styles.button,
+                    styles.outerButton,
+                    { shadowColor: theme.text, backgroundColor: theme.background }
+                ]}
+                onPress={() => setActiveTab("settings")}
+            >
                 <Settings size={textSizes.lg} color={theme.text} />
             </Pressable>
         </View>
     );
 }
 
+const shadowStyle = {
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+};
+
 const styles = StyleSheet.create({
     container: {
         width,
-        height: 60,
-        marginBottom: 50,
-        paddingHorizontal: spacing.lg,
-        gap: spacing.md,
+        padding: spacing.lg,
+        gap: spacing.lg,
         flexDirection: "row",
-    },
-    iconWrapper: {
-        height: "100%",
-        justifyContent: "center",
         alignItems: "center",
+        alignSelf: "flex-start",
+        backgroundColor: "red"
     },
-    midSection: {
+
+    middleContainer: {
         flex: 1,
         flexDirection: "row",
-    },
-    borderRadius: {
+        alignItems: "center",
+        justifyContent: "space-between",
         borderRadius: 20,
+        ...shadowStyle,
     },
-    shadow: {
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
-        elevation: 4,
-    }
+
+    button: {
+        aspectRatio: 1,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: spacing.md
+    },
+
+    outerButton: {
+        ...shadowStyle,
+    },
 });

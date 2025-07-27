@@ -138,7 +138,6 @@ const styles = {
     },
     exercisesContainer: {
         flex: 1,
-        marginBottom: spacing.md
     },
     exerciseNameText: {
         fontSize: textSizes.sm,
@@ -163,7 +162,7 @@ const styles = {
         marginRight: 'auto',
     },
     restTimerContainer: {
-        flex: 0
+        paddingVertical: spacing.lg
     },
 };
 

@@ -8,7 +8,7 @@ import { textSizes, textWeights } from "@/constants/text";
 import { definitions } from "@/constants/definitions";
 import { useSplitContext } from "@/contexts/splitContext";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 type Props = {
     theme: any
@@ -26,6 +26,8 @@ export default function SplitsDisplay({
     setIsEditing
 }: Props) {
 
+    const { split } = useSplitContext()
+
     function handleSelectSplit(split: Split) {
         setSelectedSplit(split)
         setIsEditing(true)
@@ -39,6 +41,10 @@ export default function SplitsDisplay({
 
     return (
         <View style={styles.scrollPage}>
+            <View style={styles.header}>
+                <Text style={[{fontSize: textSizes.sm, fontWeight: textWeights.regular, color: theme.text}]}>Active split</Text>
+                <Text style={[{fontSize: textSizes.xl, fontWeight: textWeights.bold, color: theme.text, textAlign: "center"}]} numberOfLines={2} lineBreakMode="tail">{split?.name}</Text>
+            </View>
             <RecordButton
                 theme={theme}
                 style={{
@@ -61,7 +67,7 @@ export default function SplitsDisplay({
                     <Plus size={textSizes.md} color={theme.text} />
                 </Pressable>
             </RecordButton>
-            <ScrollView showsVerticalScrollIndicator={false} style={{flex: 0}}>
+            <ScrollView showsVerticalScrollIndicator={false} style={{flexShrink: 1}}>
                 {splits?.map((split) => (
                     <RecordButton
                         theme={theme}
@@ -75,7 +81,6 @@ export default function SplitsDisplay({
                                 fontWeight: textWeights.regular,
                                 color: theme.text,
                                 marginRight: "auto",
-                                flexShrink: 1,
                             }}
                             numberOfLines={1}
                             ellipsizeMode="tail"
@@ -85,19 +90,19 @@ export default function SplitsDisplay({
                         <ChevronRight size={textSizes.md} color={theme.text} />
                     </RecordButton>
                 ))}
-                <Text
-                    style={{
-                        fontSize: textSizes.xs,
-                        fontWeight: textWeights.light,
-                        color: theme.text,
-                        paddingHorizontal: spacing.lg,
-                        textAlign: "left",
-                        paddingVertical: spacing.md
-                    }}
-                >
-                    {definitions.split}
-                </Text>
             </ScrollView>
+            <Text
+                style={{
+                    fontSize: textSizes.xs,
+                    fontWeight: textWeights.light,
+                    color: theme.text,
+                    paddingHorizontal: spacing.lg,
+                    textAlign: "left",
+                    paddingVertical: spacing.md,
+                }}
+            >
+                {definitions.split}
+            </Text>
         </View>
     );
 }
@@ -107,5 +112,10 @@ const styles = StyleSheet.create({
         width,
         flex: 1,
         paddingHorizontal: spacing.lg,
+    },
+    header: {
+        alignItems: "center",
+        justifyContent: "center",
+        padding: spacing.lg
     },
 });

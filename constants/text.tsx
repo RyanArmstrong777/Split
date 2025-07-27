@@ -11,8 +11,8 @@ export const textSizes = {
 } as const;
 
 export const textWeights = {
-  light: "200",
-  regular: "400",
-  medium: "600",
+  light: "300",
+  regular: "500",
+  medium: "700",
   bold: "800"
 } as const;

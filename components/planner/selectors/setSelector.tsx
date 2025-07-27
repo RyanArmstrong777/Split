@@ -1,5 +1,5 @@
-import React from "react";
-import { ScrollView, Text, Dimensions, View, Pressable } from "react-native";
+import React, { SetStateAction, useEffect, useState } from "react";
+import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
 import { ChevronRight, ChevronLeft, Plus, Trash2 } from "lucide-react-native";
 import RecordButton from "@/components/buttons/recordButton";
 import { spacing } from "@/constants/spacing";
@@ -9,6 +9,8 @@ import { createSet } from "@/db/queries/sets/createSet";
 import { deleteExercise } from "@/db/queries/exercises/deleteExercise";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { formatWeight } from "@/utilities/formatWeight";
+import DefaultInput from "@/components/inputs/defaultInput";
+import { updateExerciseName } from "@/db/queries/exercises/updateExerciseName";
 
 const { width } = Dimensions.get("window");
 
@@ -18,7 +20,7 @@ type SetSelectorProps = {
     sets: Set[]
     weightUnits: string | undefined
     refreshExercises: boolean
-    setRefreshExercises: (value: boolean) => void
+    setRefreshExercises: React.Dispatch<SetStateAction<boolean>>
     selectedExercise: Exercise
     goToSection: (section: number) => void
     setSelectedSet: (set: Set) => void;
@@ -36,15 +38,24 @@ const SetSelector: React.FC<SetSelectorProps> = ({
     setSelectedSet,
 }) => {
 
-    const { settings } = useAppSettingsContext() 
+    const { settings } = useAppSettingsContext()
+
+    const [exerciseName, setExerciseName] = useState(selectedExercise.name)
+    const [isActive, setIsActive] = useState(false)
 
     async function handleCreateSet() {
         const newSet = await createSet({db: db, exerciseId: selectedExercise.id, order: sets.length})
+        if (settings?.vibrationFeedback === 1) {
+            Vibration.vibrate(200)
+        }
         handleSelectSet(newSet)
     }
 
     async function handleDeleteExercise() {
         await deleteExercise(db, selectedExercise.id)
+        if (settings?.vibrationFeedback === 1) {
+            Vibration.vibrate(200)
+        }
         setRefreshExercises(!refreshExercises)
     }
 
@@ -52,6 +63,32 @@ const SetSelector: React.FC<SetSelectorProps> = ({
         setSelectedSet(set)
         goToSection(3)
     }
+
+    async function updateExercise() {
+        await updateExerciseName(db, selectedExercise.id, exerciseName)
+    }
+
+    useEffect(() => {
+
+        if (!selectedExercise?.id || exerciseName === "" || !isActive) return;
+
+        const timeout = setTimeout(() => {
+            updateExercise()
+            setRefreshExercises(prev => !prev)
+        }, 500)
+
+        return () => clearTimeout(timeout);
+
+    }, [exerciseName])
+
+    useEffect(() => {
+        if (selectedExercise?.name) {
+            setIsActive(false)
+            setExerciseName(selectedExercise.name)
+            setRefreshExercises(prev => !prev)
+            setIsActive(true)
+        }
+    }, [selectedExercise]);
 
     return (
         <View style={{width: width - spacing.lg * 2}}>
@@ -62,16 +99,7 @@ const SetSelector: React.FC<SetSelectorProps> = ({
                 <Pressable onPress={() => goToSection(1)} style={{paddingVertical: spacing.md}}>
                     <ChevronLeft size={textSizes.md} color={theme.text} />
                 </Pressable>
-                <Text
-                    style={{
-                        fontSize: textSizes.sm,
-                        fontWeight: textWeights.bold,
-                        color: theme.text,
-                        marginRight: "auto"
-                    }}
-                >
-                    {selectedExercise?.name ?? ""}
-                </Text>
+                <DefaultInput theme={theme} placeholder={"Exercise name..."} value={exerciseName} onChangeText={setExerciseName} />
                 <Pressable onPress={handleCreateSet} style={{paddingVertical: spacing.md}}>
                     <Plus size={textSizes.md} color={theme.text} />
                 </Pressable>

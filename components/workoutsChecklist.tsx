@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Dimensions } from "react-native";
+import { ScrollView, StyleSheet, Dimensions, View } from "react-native";
 import { useState, useRef, useEffect, forwardRef } from "react";
 import { spacing } from "../constants/spacing";
 import { useSQLiteContext } from "expo-sqlite";
@@ -43,20 +43,22 @@ const WorkoutChecklist = forwardRef<WorkoutChecklistRef, { theme: Theme, resetPa
     }, [resetPage])
 
     return (
-        <ScrollView
-            ref={scrollRef}
-            style={styles.exercisesPager}
-            showsHorizontalScrollIndicator={false}
-            horizontal
-            pagingEnabled
-            scrollEnabled={false}
-        >
-            <ExercisesChecklist db={db} splitId={splitId} goToPage={goToPage} selectedDate={selectedDate} selectedWorkout={selectedWorkout} theme={theme} setSelectedExercise={setSelectedExercise} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} />
-            
-            <SetsChecklist db={db} theme={theme} selectedExercise={selectedExercise} setRefreshExercises={setRefreshExercises} setSelectedExercise={setSelectedExercise} setSelectedSet={setSelectedSet} weightUnits={weightUnits} goToPage={goToPage} refreshSets={refreshSets} setRefreshSets={setRefreshSets} />
+        <View style={{flex: 1}}>
+            <ScrollView
+                ref={scrollRef}
+                style={styles.exercisesPager}
+                showsHorizontalScrollIndicator={false}
+                horizontal
+                pagingEnabled
+                scrollEnabled={false}
+            >
+                <ExercisesChecklist db={db} splitId={splitId} goToPage={goToPage} selectedDate={selectedDate} selectedWorkout={selectedWorkout} theme={theme} setSelectedExercise={setSelectedExercise} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} />
+                
+                <SetsChecklist db={db} theme={theme} selectedExercise={selectedExercise} setRefreshExercises={setRefreshExercises} setSelectedExercise={setSelectedExercise} setSelectedSet={setSelectedSet} weightUnits={weightUnits} goToPage={goToPage} refreshSets={refreshSets} setRefreshSets={setRefreshSets} />
 
-            <SetDetails theme={theme} db={db} setRefreshSets={setRefreshSets} setRefreshExercises={setRefreshExercises} selectedSet={selectedSet} setSelectedSet={setSelectedSet} selectedExercise={selectedExercise} weightUnits={weightUnits} goToPage={goToPage} />
-        </ScrollView>
+                <SetDetails theme={theme} db={db} setRefreshSets={setRefreshSets} setRefreshExercises={setRefreshExercises} selectedSet={selectedSet} setSelectedSet={setSelectedSet} selectedExercise={selectedExercise} weightUnits={weightUnits} goToPage={goToPage} />
+            </ScrollView>
+        </View>
     );
 });
 
@@ -64,8 +66,7 @@ export default WorkoutChecklist;
 
 const styles = StyleSheet.create({
     exercisesPager: {
-        height: "auto",
-        marginBottom: spacing.lg,
+        flex: 1
     },
     pageView: {
         width,
