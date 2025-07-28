@@ -1,23 +1,24 @@
-import { useEffect, useState, useCallback, useMemo, useRef, RefObject } from "react";
-import { StyleSheet, Dimensions, SafeAreaView, Text, View, Pressable, ScrollView, Vibration } from "react-native";
-import { useThemeContext } from "@/contexts/themeContext";
-import { spacing } from "../constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
+import AdBanner from "@/components/ads/adBanner";
 import RecordButton from "@/components/buttons/recordButton";
-import { useSQLiteContext } from "expo-sqlite";
-import { LineChart } from "react-native-chart-kit"
 import SubmitButton from "@/components/buttons/submitButton";
-import { Dumbbell, Pencil, ChevronLeft, ChevronRight } from "lucide-react-native";
+import DefaultInput from "@/components/inputs/defaultInput";
+import { textSizes, textWeights } from "@/constants/text";
 import { BodyMetrics, ChartData, CompletedExerciseWithDate } from "@/constants/types";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import { useThemeContext } from "@/contexts/themeContext";
 import { retrieveBodyMetricsHistory } from "@/db/queries/body_metrics/retrieveBodyMetricsHistory";
+import { saveBodymetrics } from "@/db/queries/body_metrics/saveBodymetrics";
+import { getCompletedExercisesWithStartDate } from "@/db/queries/completed_exercises/getCompletedExercisesWithStartDate";
 import { formatBodyMetricsChartData } from "@/utilities/formatBodyMetricsChartData";
+import { formatExercisesChartData } from "@/utilities/formatExercisesChartData";
 import { getLastMonday } from "@/utilities/getLastMonday";
 import { useFocusEffect } from '@react-navigation/native';
-import { getCompletedExercisesWithStartDate } from "@/db/queries/completed_exercises/getCompletedExercisesWithStartDate";
-import { formatExercisesChartData } from "@/utilities/formatExercisesChartData";
-import DefaultInput from "@/components/inputs/defaultInput";
-import { saveBodymetrics } from "@/db/queries/body_metrics/saveBodymetrics";
+import { useSQLiteContext } from "expo-sqlite";
+import { ChevronLeft, ChevronRight, Dumbbell, Pencil } from "lucide-react-native";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, Pressable, ScrollView, StyleSheet, Text, Vibration, View } from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import { spacing } from "../constants/spacing";
 
 const { width, height } = Dimensions.get("window");
 
@@ -151,6 +152,9 @@ export default function AnalyticsScreen() {
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Year" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Year</Text>
                             </Pressable>
                         </ScrollView>
+                        <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                            <AdBanner />
+                        </View>
                     </View>
 
                     <ScrollView style={{flex: 1, gap: spacing.lg}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: spacing.lg}} ref={mainRef}>

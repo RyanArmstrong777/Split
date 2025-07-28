@@ -1,12 +1,12 @@
-import React from "react";
-import { View, Text, StyleSheet, Dimensions, ScrollView, Pressable } from "react-native";
-import { ChevronRight, Plus } from "lucide-react-native";
 import RecordButton from "@/components/buttons/recordButton";
-import { Split } from "@/constants/types";
+import { definitions } from "@/constants/definitions";
 import { spacing } from "@/constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
-import { definitions } from "@/constants/definitions";
+import { Split } from "@/constants/types";
 import { useSplitContext } from "@/contexts/splitContext";
+import { ChevronRight, Plus } from "lucide-react-native";
+import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import AdBanner from "../ads/adBanner";
 
 const { width, height } = Dimensions.get("window");
 
@@ -103,6 +103,9 @@ export default function SplitsDisplay({
             >
                 {definitions.split}
             </Text>
+            <View style={{alignItems: "center", width: "100%"}}>
+                <AdBanner />
+            </View>
         </View>
     );
 }

@@ -1,18 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, Text, View, Dimensions, Pressable } from 'react-native';
-import { Check, ChevronRight, ChevronLeft, Plus, Pencil } from 'lucide-react-native';
-import RecordButton from '../buttons/recordButton';
-import { textSizes, textWeights } from '@/constants/text';
+import { definitions } from '@/constants/definitions';
 import { spacing } from '@/constants/spacing';
-import { CompletedExercise, Theme } from '@/constants/types';
+import { textSizes, textWeights } from '@/constants/text';
+import { CompletedExercise, CompletedWorkout, Theme, Workout } from '@/constants/types';
+import { createCompletedExercise } from '@/db/queries/completed_exercises/createCompletedExercise';
 import { getActiveCompletedExercisesForDate } from '@/db/queries/completed_exercises/getActiveCompletedExercisesForDate';
 import { SQLiteDatabase } from 'expo-sqlite';
-import DefaultInput from '../inputs/defaultInput';
-import { definitions } from '@/constants/definitions';
-import SubmitButton from '../buttons/submitButton';
-import { createCompletedExercise } from '@/db/queries/completed_exercises/createCompletedExercise';
-import { CompletedWorkout, Workout } from '@/constants/types';
+import { Check, ChevronLeft, ChevronRight, Pencil, Plus } from 'lucide-react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
 import AdBanner from '../ads/adBanner';
+import RecordButton from '../buttons/recordButton';
+import SubmitButton from '../buttons/submitButton';
+import DefaultInput from '../inputs/defaultInput';
 
 type ExercisesChecklistProps = {
     theme: Theme
@@ -84,6 +83,9 @@ const ExercisesChecklist = ({theme, db, selectedWorkout, goToPage, splitId, refr
                     </Pressable>
                 </RecordButton>
                 <ScrollView showsVerticalScrollIndicator={false}>
+                    <RecordButton theme={theme} style={{paddingVertical: spacing.md, justifyContent: "center"}}>
+                        <AdBanner />
+                    </RecordButton>
                     {exercises.map((exercise, index) => (
                         <RecordButton
                             key={index}

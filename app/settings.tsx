@@ -1,18 +1,19 @@
+import AdBanner from "@/components/ads/adBanner"
+import RecordButton from "@/components/buttons/recordButton"
+import ShopItemCard from "@/components/shopItem"
 import { spacing } from "@/constants/spacing"
 import { textSizes, textWeights } from "@/constants/text"
-import { useThemeContext } from "@/contexts/themeContext"
-import { View, StyleSheet, Text, Switch, ScrollView, Vibration, Dimensions, Pressable } from "react-native"
-import RecordButton from "@/components/buttons/recordButton"
-import { useAppSettingsContext } from "@/contexts/appSettingsContext"
-import { useState, useEffect, useRef, useCallback } from "react"
-import { Bell, Check, ChevronLeft, ChevronRight, Dumbbell, Eraser, Moon, RefreshCw, ShoppingCart, Vibrate } from "lucide-react-native"
-import deleteTables from "@/db/utilities/deleteTables"
-import { useSQLiteContext } from "expo-sqlite"
-import runSeeder from "@/db/seeder"
-import { getAllProducts } from "@/db/queries/shop/getAllProducts"
 import { ShopProduct } from "@/constants/types"
+import { useAppSettingsContext } from "@/contexts/appSettingsContext"
+import { useThemeContext } from "@/contexts/themeContext"
+import { getAllProducts } from "@/db/queries/shop/getAllProducts"
+import runSeeder from "@/db/seeder"
+import deleteTables from "@/db/utilities/deleteTables"
 import { useFocusEffect } from "expo-router"
-import ShopItemCard from "@/components/shopItem"
+import { useSQLiteContext } from "expo-sqlite"
+import { Bell, Check, ChevronLeft, ChevronRight, Dumbbell, Eraser, Moon, RefreshCw, ShoppingCart, Vibrate } from "lucide-react-native"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Dimensions, Pressable, ScrollView, StyleSheet, Switch, Text, Vibration, View } from "react-native"
 
 const { width } = Dimensions.get("window")
 
@@ -179,6 +180,9 @@ export default function SettingsScreen() {
                     </ScrollView>
                 </View>
             </ScrollView>
+            <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                <AdBanner />
+            </View>
         </View> 
     )
 }

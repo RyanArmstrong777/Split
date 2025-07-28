@@ -1,19 +1,21 @@
-import { BannerAd } from 'react-native-google-mobile-ads';
-import { Dimensions } from 'react-native';
-import { spacing } from '@/constants/spacing';
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
-const { width, height } = Dimensions.get("window")
+const adUnitId = __DEV__ ? TestIds.BANNER : 'your-production-ad-id';
 
-const AdBanner = () => {
-    return (
-        <BannerAd
-            unitId={"ca-app-pub-3940256099942544/6300978111"}
-            size={`${width - spacing.lg * 2}x${height * 0.1}`}
-            requestOptions={{
-                requestNonPersonalizedAdsOnly: true,
-            }}
-        />
-    );
-};
-
-export default AdBanner
+export default function AdBanner() {
+  return (
+    <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.BANNER}
+        requestOptions={{
+            requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdLoaded={() => {
+            console.log('Ad loaded');
+        }}
+        onAdFailedToLoad={(error) => {
+            console.error('Ad failed to load: ', error);
+        }}
+    />
+  );
+}
