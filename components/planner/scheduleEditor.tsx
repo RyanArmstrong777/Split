@@ -1,22 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import { ScrollView, Dimensions, Text, StyleSheet, View, Pressable } from "react-native";
 import { spacing } from "@/constants/spacing";
-import { Split, Theme, Exercise, Set, Workout } from "@/constants/types";
-import WorkoutSelector from "./selectors/WorkoutSelector";
-import ExerciseSelector from "./selectors/exerciseSelector";
-import SetSelector from "./selectors/setSelector";
-import { getWeightUnits } from "@/db/queries/app_settings/getWeightUnits";
-import { getExercisesByWorkoutId } from "@/db/queries/exercises/getExercisesByWorkoutId";
+import { textSizes, textWeights } from "@/constants/text";
+import { Exercise, Set, Split, Theme, Workout } from "@/constants/types";
+import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { getSetsByExerciseId } from "@/db/queries/sets/getSetsByExerciseId";
-import SetEditor from "./selectors/SetEditor";
 import { getLastMonday } from "@/utilities/getLastMonday";
 import { ChevronLeft } from "lucide-react-native";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import AdBanner from "../ads/adBanner";
 import RecordButton from "../buttons/recordButton";
-import { textSizes, textWeights } from "@/constants/text";
 import WeeklyCalendar from "../weeklyCalendar";
-import { WorkoutSelectorHandle } from "./selectors/WorkoutSelector";
-import { CompletedWorkout } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import SetEditor from "./selectors/SetEditor";
+import WorkoutSelector, { WorkoutSelectorHandle } from "./selectors/WorkoutSelector";
+import ExerciseSelector from "./selectors/exerciseSelector";
+import SetSelector from "./selectors/setSelector";
 
 const { width } = Dimensions.get("window");
 
@@ -55,7 +52,7 @@ const ScheduleEditor = ({
     }
 
     const [sets, setSets] = useState([] as Set[])
-    const [selectedSet, setSelectedSet] = useState({} as Set)
+    const [selectedSet, setSelectedSet] = useState<Set | null>(null)
 
     async function getSets() {
         setSets(await getSetsByExerciseId(db, selectedExercise.id))
@@ -119,8 +116,12 @@ const ScheduleEditor = ({
 
                 <SetSelector goToSection={goToSection} theme={theme} sets={sets} weightUnits={settings?.weightUnit} refreshExercises={refreshExercises} setRefreshExercises={setRefreshExercises} selectedExercise={selectedExercise} setSelectedSet={setSelectedSet} db={db} />
 
-                <SetEditor goToSection={goToSection} theme={theme} weightUnits={settings?.weightUnit} refreshSets={refreshSets} setRefreshSets={setRefreshSets} selectedSet={selectedSet} db={db} />
+                <SetEditor goToSection={goToSection} theme={theme} weightUnits={settings?.weightUnit} refreshSets={refreshSets} setRefreshSets={setRefreshSets} selectedSet={selectedSet} setSelectedSet={setSelectedSet} db={db} />
             </ScrollView>
+
+            <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                <AdBanner />
+            </View>
 
         </View>
     );

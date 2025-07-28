@@ -12,6 +12,7 @@ import { getCompletedExercisesWithStartDate } from "@/db/queries/completed_exerc
 import { formatBodyMetricsChartData } from "@/utilities/formatBodyMetricsChartData";
 import { formatExercisesChartData } from "@/utilities/formatExercisesChartData";
 import { getLastMonday } from "@/utilities/getLastMonday";
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSQLiteContext } from "expo-sqlite";
 import { ChevronLeft, ChevronRight, Dumbbell, Pencil } from "lucide-react-native";
@@ -32,6 +33,12 @@ export default function AnalyticsScreen() {
     const [startDate, setStartDate] = useState(getLastMonday())
     const [refreshMetrics, setRefreshmetrics] = useState(false)
 
+    const onChange = (event: DateTimePickerEvent, date: Date | undefined) => {
+        if (date) {
+            setStartDate(date.toISOString().split('T')[0])
+        }
+    };
+
     const [metric, setMetric] = useState<"Weight" | "BF%" | "BMI">("Weight")
     const [bodyMetricsHistory, setBodymetricsHistory] = useState<BodyMetrics[] | null>()
 
@@ -45,13 +52,24 @@ export default function AnalyticsScreen() {
         editRef.current?.scrollTo({x: value ? width : 0})
     }
 
-    function getChartLabels() {
+    function getChartLabels(): string[] {
         if (timeframe === "Week") {
-            return ["M", "T", "W", "T", "F", "S", "S"]
-        } else if (timeframe === "Month") {
-            return ["WK1", "WK2", "WK3", "WK4"]
+        return Array.from({ length: 7 }, (_, i) => {
+            const currentDate = new Date(startDate);
+            currentDate.setDate(currentDate.getDate() + i);
+            return currentDate.getDate().toString();
+        });
+    }
+
+        if (timeframe === "Month") {
+            return ["Wk1", "Wk2", "Wk3", "Wk4"];
         }
-        return ['J', 'F', 'M', 'A', 'M', 'J','J', 'A', 'S', 'O', 'N', 'D']
+
+        if (timeframe === "Year") {
+            return ["Q1", "Q2", "Q3", "Q4"];
+        }
+
+        return [];
     }
 
     async function getBodyMetricsHistory() {
@@ -81,7 +99,7 @@ export default function AnalyticsScreen() {
                 datasets:  [{ data: 
                     formatBodyMetricsChartData(
                         bodyMetricsHistory,
-                        getLastMonday(),
+                        startDate,
                         timeframe,
                         metric
                     ).map(data => metric === "Weight" ? data.weight : metric === "BF%" ? data.bodyFatPercentage : data.BMI)
@@ -120,6 +138,7 @@ export default function AnalyticsScreen() {
     )
 
     useEffect(() => {
+        console.log(startDate)
         if (selectedExercise) {
             const data = formatExercisesChartData(
                 exercisesHistory,
@@ -140,8 +159,19 @@ export default function AnalyticsScreen() {
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={editRef} scrollEnabled={false}>
                 <View style={{flex: 1}}>
                     <View style={[styles.container, {paddingHorizontal: spacing.lg * 2, flex: 0}]}>
-                        <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>Analytics</Text>
-                        <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm, paddingBottom: spacing.lg}} horizontal showsHorizontalScrollIndicator={false}>
+                        <View style={{flexDirection: "row", paddingTop: spacing.lg}}>
+                            <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold}}>Analytics</Text>
+                            <DateTimePicker
+                                value={new Date(startDate)}
+                                mode="date"
+                                display="default"
+                                style={{flex: 1, marginVertical: "auto", paddingRight: spacing.lg}}
+                                textColor={theme.text}
+                                themeVariant={theme.mode as "light" | "dark"}
+                                onChange={onChange}
+                            />
+                        </View>
+                        <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm, paddingBottom: settings?.removeAds === 1 ? spacing.lg : 0}} horizontal showsHorizontalScrollIndicator={false}>
                             <Pressable style={[styles.timeframe, {backgroundColor: timeframe === "Week" ? theme.text : theme.card}]} onPress={() => setTimeframe("Week")}>
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Week" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Week</Text>
                             </Pressable>
@@ -152,7 +182,7 @@ export default function AnalyticsScreen() {
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Year" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Year</Text>
                             </Pressable>
                         </ScrollView>
-                        <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                        <View style={{alignItems: "center", width: "100%", paddingTop: spacing.sm, paddingBottom: spacing.lg}}>
                             <AdBanner />
                         </View>
                     </View>

@@ -1,16 +1,16 @@
-import React, { SetStateAction, useEffect, useState } from "react";
-import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
-import { ChevronRight, ChevronLeft, Plus, Trash2 } from "lucide-react-native";
 import RecordButton from "@/components/buttons/recordButton";
+import DefaultInput from "@/components/inputs/defaultInput";
 import { spacing } from "@/constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
-import { Set, Exercise } from "@/constants/types";
-import { createSet } from "@/db/queries/sets/createSet";
-import { deleteExercise } from "@/db/queries/exercises/deleteExercise";
+import { Exercise, Set } from "@/constants/types";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { formatWeight } from "@/utilities/formatWeight";
-import DefaultInput from "@/components/inputs/defaultInput";
+import { deleteExercise } from "@/db/queries/exercises/deleteExercise";
 import { updateExerciseName } from "@/db/queries/exercises/updateExerciseName";
+import { createSet } from "@/db/queries/sets/createSet";
+import { formatWeight } from "@/utilities/formatWeight";
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react-native";
+import React, { SetStateAction, useEffect, useState } from "react";
+import { Dimensions, Pressable, ScrollView, Text, Vibration, View } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -133,7 +133,7 @@ const SetSelector: React.FC<SetSelectorProps> = ({
                                     marginRight: "auto",
                                 }}
                             >
-                                {`${settings?.weightUnit === "kg" ? set.weight : formatWeight(set.weight)}${weightUnits}`}
+                                {`${settings?.weightUnit === "kg" ? set.weight.toFixed(1) : formatWeight(set.weight).toFixed(1)}${weightUnits}`}
                             </Text>
                         )}
                         {set.reps != null && (

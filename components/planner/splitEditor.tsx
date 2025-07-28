@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, StyleSheet, Dimensions, ViewStyle, Vibration } from "react-native";
-import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react-native";
-import RecordButton from "../buttons/recordButton";
-import DefaultInput from "../inputs/defaultInput";
-import SubmitButton from "../buttons/submitButton";
 import { spacing } from "@/constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
 import { Split } from "@/constants/types";
+import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { useSplitContext } from "@/contexts/splitContext";
 import { deleteSplit } from "@/db/queries/splits/deleteSplit";
 import { SQLiteDatabase } from "expo-sqlite";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Pressable, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
+import AdBanner from "../ads/adBanner";
+import RecordButton from "../buttons/recordButton";
+import SubmitButton from "../buttons/submitButton";
+import DefaultInput from "../inputs/defaultInput";
 
 const { width } = Dimensions.get("window");
 
@@ -165,8 +166,11 @@ const SplitEditor: React.FC<Props> = ({
 
             <RecordButton
                 theme={theme}
-                style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg }}
+                style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg, flexDirection: "column" }}
             >
+                <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                    <AdBanner />
+                </View>
                 <SubmitButton
                     theme={theme}
                     text={"Set as active split"}

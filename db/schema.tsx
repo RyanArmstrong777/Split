@@ -22,6 +22,7 @@ export async function createTables(db: any) {
                 weight_unit TEXT DEFAULT 'kg',
                 vibration_feedback INTEGER DEFAULT 1,
                 current_split_id INTEGER NOT NULL DEFAULT 1,
+                remove_ads INTEGER DEFAULT 0,
                 FOREIGN KEY (current_split_id) REFERENCES splits(id)
             );
         `);

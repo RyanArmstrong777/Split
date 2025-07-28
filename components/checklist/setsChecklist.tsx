@@ -1,16 +1,16 @@
+import { spacing } from '@/constants/spacing';
+import { textSizes, textWeights } from '@/constants/text';
+import { CompletedExercise, CompletedSet, Theme } from '@/constants/types';
+import { useAppSettingsContext } from '@/contexts/appSettingsContext';
+import { createCompletedSet } from '@/db/queries/completed_sets/createCompletedSet';
+import { getActiveCompletedSets } from '@/db/queries/completed_sets/getActiveCompletedSets';
+import { formatWeight } from '@/utilities/formatWeight';
+import { SQLiteDatabase } from 'expo-sqlite';
+import { Check, ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, View, Pressable, Dimensions } from 'react-native';
-import { ChevronLeft, ChevronRight, Check, Plus } from 'lucide-react-native';
+import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
 import RecordButton from '../buttons/recordButton';
 import RestTimer from '../buttons/restTimer';
-import { textSizes, textWeights } from '@/constants/text';
-import { spacing } from '@/constants/spacing';
-import { CompletedExercise, CompletedSet, Theme } from '@/constants/types';
-import { getActiveCompletedSets } from '@/db/queries/completed_sets/getActiveCompletedSets';
-import { SQLiteDatabase } from 'expo-sqlite';
-import { createCompletedSet } from '@/db/queries/completed_sets/createCompletedSet';
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
-import { formatWeight } from '@/utilities/formatWeight';
 
 type SetsListProps = {
     db: SQLiteDatabase
@@ -95,8 +95,8 @@ const SetsChecklist = ({
                         { (set.targetWeight != null || set.weight != null) && (
                             <Text style={[styles.weightText, { color: theme.text, marginRight: "auto" }]}>
                                 {`${set.targetWeight != null && !set.completed 
-                                ? (settings?.weightUnit === "kg" ? set.targetWeight : formatWeight(set.targetWeight)) 
-                                : (settings?.weightUnit === "kg" ? set.weight : (set.weight != null ? formatWeight(set.weight) : "-"))} ${weightUnits}`}
+                                ? (settings?.weightUnit === "kg" ? set.targetWeight.toFixed(1) : formatWeight(set.targetWeight).toFixed(1)) 
+                                : (settings?.weightUnit === "kg" ? set.weight?.toFixed(1) : (set.weight != null ? formatWeight(set.weight).toFixed(1) : "-"))} ${weightUnits}`}
                             </Text>
                         )}
 

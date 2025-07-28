@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { AppSettings } from '@/constants/types';
 import { getAppSettings } from '@/db/queries/app_settings/getAppSettings';
-import { useSQLiteContext } from 'expo-sqlite';
 import { updateAppSettings } from '@/db/queries/app_settings/updateAppSettings';
+import { useSQLiteContext } from 'expo-sqlite';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface AppSettingsContextProps {
     settings: AppSettings | null;
@@ -17,7 +17,8 @@ const defaultSettings: AppSettings = {
     weightUnit: 'kg',
     notificationsEnabled: 1,
     vibrationFeedback: 1,
-    currentSplitId: 1
+    currentSplitId: 1,
+    removeAds: 0
 };
 
 const AppSettingsContext = createContext<AppSettingsContextProps | null>(null);

@@ -6,7 +6,8 @@ export type AppSettings = {
     notificationsEnabled: number,
     weightUnit: 'kg' | 'lbs',
     vibrationFeedback: number,
-    currentSplitId: number
+    currentSplitId: number,
+    removeAds: number
 };
 
 export type Split = {

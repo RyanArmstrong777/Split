@@ -12,7 +12,8 @@ export async function getAppSettings(db: any): Promise<AppSettings | null> {
             notificationsEnabled: result.notifications_enabled,
             weightUnit: result.weight_unit,
             vibrationFeedback: result.vibration_feedback,
-            currentSplitId: result.current_split_id
+            currentSplitId: result.current_split_id,
+            removeAds: result.remove_ads
         };
 
         return mappedSettings;

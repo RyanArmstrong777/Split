@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, View, Pressable, Dimensions, Switch, Vibration } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
-import RecordButton from '../buttons/recordButton';
-import DefaultInput from '../inputs/defaultInput';
-import SubmitButton from '../buttons/submitButton';
-import { textSizes, textWeights } from '@/constants/text';
 import { spacing } from '@/constants/spacing';
+import { textSizes, textWeights } from '@/constants/text';
 import { CompletedExercise, CompletedSet, Theme } from '@/constants/types';
+import { useAppSettingsContext } from '@/contexts/appSettingsContext';
 import { completeSet } from '@/db/queries/completed_sets/completeSet';
-import { SQLiteDatabase } from 'expo-sqlite';
 import { deleteCompletedSet } from '@/db/queries/completed_sets/deleteCompletedSet';
 import { updateCompletedSet } from '@/db/queries/completed_sets/updateCompletedSet';
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
+import { formatWeight } from '@/utilities/formatWeight';
 import { lbsToKg } from '@/utilities/lbsToKg';
+import { SQLiteDatabase } from 'expo-sqlite';
+import { ChevronLeft } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Pressable, ScrollView, Switch, Text, Vibration, View } from 'react-native';
+import RecordButton from '../buttons/recordButton';
+import SubmitButton from '../buttons/submitButton';
+import DefaultInput from '../inputs/defaultInput';
 
 type SetDetailsProps = {
     theme: Theme
@@ -78,12 +79,14 @@ const SetDetails = ({
 
         let newRecordWeight = true;
         let newRecordReps = true;
-        let newRecordTime = true;
+        let newRecordTime = false;
 
-        if (selectedSet?.targetWeight != null) {
-            setWeightInput(selectedSet.targetWeight.toString());
-        } else if (selectedSet?.weight) {
-            setWeightInput(selectedSet.weight.toString());
+        if (selectedSet?.weight != null && selectedSet.weight) {
+            setWeightInput(settings?.weightUnit === "kg" ? selectedSet.weight.toFixed(1) : formatWeight(selectedSet.weight).toFixed(1))
+            setRecordWeight(true)
+        } else if (selectedSet?.targetWeight) {
+            setWeightInput(settings?.weightUnit === "kg" ? selectedSet.targetWeight.toFixed(1) : formatWeight(selectedSet.targetWeight).toFixed(1));
+            setRecordWeight(true)
         } else {
             setWeightInput("");
             newRecordWeight = false;
@@ -136,7 +139,7 @@ const SetDetails = ({
 
     async function handleCompleteSet() {
         if (selectedSet) {
-            await completeSet({db: db, id: selectedSet.id, weight: parseInt(weightInput, 10), time: parseInt(timeInput, 10), reps: parseInt(repsInput, 10)})
+            await completeSet({db: db, id: selectedSet.id, weight: parseInt(settings?.weightUnit === "kg" ? weightInput : lbsToKg(parseInt(weightInput)).toString(), 10), time: parseInt(timeInput, 10), reps: parseInt(repsInput, 10)})
             resetInputs()
             if (settings?.vibrationFeedback === 1) {
                 Vibration.vibrate(200)
@@ -157,7 +160,7 @@ const SetDetails = ({
             <ScrollView contentContainerStyle={styles.exercisesContainer} showsVerticalScrollIndicator={false}>
     
                 <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
-                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "25%", paddingVertical: spacing.md + spacing.sm }]}>Weight / {weightUnits}:</Text>
+                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "35%", paddingVertical: spacing.md + spacing.sm }]}>Weight / {weightUnits}:</Text>
                     <DefaultInput
                         theme={theme}
                         placeholder={`Weight`}
@@ -170,7 +173,7 @@ const SetDetails = ({
                 </RecordButton>
 
                 <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
-                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "25%", paddingVertical: spacing.md + spacing.sm }]}>Reps:</Text>
+                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "35%", paddingVertical: spacing.md + spacing.sm }]}>Reps:</Text>
                     <DefaultInput
                         theme={theme}
                         placeholder={`Reps`}
@@ -183,7 +186,7 @@ const SetDetails = ({
                 </RecordButton>
 
                 <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
-                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "25%", paddingVertical: spacing.md + spacing.sm }]}>Time / s:</Text>
+                    <Text style={[styles.labelText, { color: theme.text , fontWeight: textWeights.regular, fontSize: textSizes.sm, width: "35%", paddingVertical: spacing.md + spacing.sm }]}>Time / s:</Text>
                     <DefaultInput
                         theme={theme}
                         placeholder={`Time`}

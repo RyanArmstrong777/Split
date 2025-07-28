@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Dimensions, Switch, ScrollView, Vibration } from "react-native";
 import RecordButton from "@/components/buttons/recordButton";
 import DefaultInput from "@/components/inputs/defaultInput";
-import SubmitButton from "@/components/buttons/submitButton";
-import { ChevronLeft, Trash2 } from "lucide-react-native";
 import { spacing } from "@/constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
 import { Set } from "@/constants/types";
-import { updateSet } from "@/db/queries/sets/updateSet";
-import { SQLiteDatabase } from "expo-sqlite";
-import { deleteSet } from "@/db/queries/sets/deleteSet";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import { deleteSet } from "@/db/queries/sets/deleteSet";
+import { updateSet } from "@/db/queries/sets/updateSet";
+import { formatWeight } from "@/utilities/formatWeight";
 import { lbsToKg } from "@/utilities/lbsToKg";
+import { SQLiteDatabase } from "expo-sqlite";
+import { ChevronLeft, Trash2 } from "lucide-react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, Pressable, ScrollView, Switch, Text, View } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -19,7 +19,8 @@ type SetEditorProps = {
     theme: any
     db: SQLiteDatabase
     weightUnits: string | undefined
-    selectedSet: Set
+    selectedSet: Set | null
+    setSelectedSet: (set: Set | null) => void
     refreshSets: boolean
     setRefreshSets: (value: boolean) => void
     goToSection: (section: number) => void
@@ -30,6 +31,7 @@ const SetEditor: React.FC<SetEditorProps> = ({
     db,
     weightUnits,
     selectedSet,
+    setSelectedSet,
     refreshSets,
     setRefreshSets,
     goToSection
@@ -61,8 +63,11 @@ const SetEditor: React.FC<SetEditorProps> = ({
 
     useEffect(() => {
         setIsActive(false)
+        if (!selectedSet) {
+            return
+        }
         if (selectedSet.weight) {
-            setWeightInput(selectedSet.weight.toString())
+            setWeightInput(settings?.weightUnit === "kg" ? selectedSet.weight.toFixed(1) : formatWeight(selectedSet.weight).toFixed(1))
             setRecordWeight(true)
         }
         if (selectedSet.time) {
@@ -85,7 +90,7 @@ const SetEditor: React.FC<SetEditorProps> = ({
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (isActive) {
+            if (isActive && selectedSet) {
                 updateSet({
                     db,
                     setId: selectedSet.id,
@@ -105,10 +110,14 @@ const SetEditor: React.FC<SetEditorProps> = ({
         if (weightInput === "" && timeInput === "" && repsInput == "") {
             handleDeleteSet()
         }
+        setSelectedSet(null)
         goToSection(2)
     }
 
     async function handleDeleteSet() {
+        if (!selectedSet) {
+            return
+        }
         await deleteSet(db, selectedSet.id)
         setRefreshSets(!refreshSets)
         goToSection(2)
@@ -131,12 +140,12 @@ const SetEditor: React.FC<SetEditorProps> = ({
             <ScrollView showsVerticalScrollIndicator={false}>
 
                 <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
-                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "25%", paddingVertical: spacing.md + spacing.sm  }}>
+                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "35%", paddingVertical: spacing.md + spacing.sm  }}>
                         {`Weight / ${weightUnits}: `}
                     </Text>
                     <DefaultInput
                         theme={theme}
-                        placeholder="Target weight..."
+                        placeholder="Weight..."
                         value={weightInput}
                         onChangeText={setWeightInput}
                         keyboardType="numeric"
@@ -146,12 +155,12 @@ const SetEditor: React.FC<SetEditorProps> = ({
                 </RecordButton>
 
                 <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
-                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "25%", paddingVertical: spacing.md + spacing.sm }}>
+                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "35%", paddingVertical: spacing.md + spacing.sm }}>
                         Reps:
                     </Text>
                     <DefaultInput
                         theme={theme}
-                        placeholder="Target reps..."
+                        placeholder="Reps..."
                         value={repsInput}
                         onChangeText={setRepsInput}
                         keyboardType="numeric"
@@ -161,12 +170,12 @@ const SetEditor: React.FC<SetEditorProps> = ({
                 </RecordButton>
 
                 <RecordButton theme={theme} style={{ paddingHorizontal: spacing.lg }}>
-                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "25%", paddingVertical: spacing.md + spacing.sm }}>
+                    <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, width: "35%", paddingVertical: spacing.md + spacing.sm }}>
                         Time / s:
                     </Text>
                     <DefaultInput
                         theme={theme}
-                        placeholder="Target time..."
+                        placeholder="Time..."
                         value={timeInput}
                         onChangeText={setTimeInput}
                         keyboardType="numeric"

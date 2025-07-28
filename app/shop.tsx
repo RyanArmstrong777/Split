@@ -1,19 +1,19 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import { useFocusEffect } from "expo-router";
-import { StyleSheet, Dimensions, Text, ScrollView, View } from "react-native";
-import { useThemeContext } from "@/contexts/themeContext";
-import { spacing } from "../constants/spacing";
-import { useSQLiteContext } from "expo-sqlite";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import RecordButton from "@/components/buttons/recordButton";
+import SubmitButton from "@/components/buttons/submitButton";
+import ShopItemCard from "@/components/shopItem";
 import { textSizes, textWeights } from "@/constants/text";
 import { ShopProduct } from "@/constants/types";
-import { getAllProducts } from "@/db/queries/shop/getAllProducts";
-import RecordButton from "@/components/buttons/recordButton";
-import ShopItemCard from "@/components/shopItem";
-import { ChevronLeft } from "lucide-react-native";
-import { setItemPurchased } from "@/db/queries/shop/setItemPurchased";
-import SubmitButton from "@/components/buttons/submitButton";
+import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { useSplitContext } from "@/contexts/splitContext";
+import { useThemeContext } from "@/contexts/themeContext";
+import { getAllProducts } from "@/db/queries/shop/getAllProducts";
+import { setItemPurchased } from "@/db/queries/shop/setItemPurchased";
+import { useFocusEffect } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { ChevronLeft } from "lucide-react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
+import { spacing } from "../constants/spacing";
 
 const { width, height } = Dimensions.get("window");
 
@@ -67,13 +67,14 @@ export default function AnalyticsScreen() {
     
     return (
         <View style={{ backgroundColor: theme.background, flex: 1 }}>
-            <View style={{padding: spacing.lg}}>
-                <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, padding: spacing.lg, paddingBottom: 0}}>
+            <View style={{padding: spacing.lg, paddingHorizontal: spacing.lg * 2, gap: spacing.sm}}>
+                <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>
                     Shop
                 </Text>
-                <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, paddingHorizontal: spacing.lg, paddingTop: spacing.sm}}>
+                <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>
                     Purchase splits used by your favourite athletes!
                 </Text>
+                <SubmitButton theme={theme} onPress={() => {}} text="Remove ads - £4.99" style={{marginTop: spacing.sm}} />
             </View>
             <ScrollView style={{flex: 1}} horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={mainRef} scrollEnabled={false}>
                 <ScrollView style={{width}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: spacing.lg, gap: spacing.sm}}>

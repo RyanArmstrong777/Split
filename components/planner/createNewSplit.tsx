@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet, Dimensions, ViewStyle } from "react-native";
-import { ChevronLeft } from "lucide-react-native";
+import { definitions } from "@/constants/definitions";
 import { spacing } from "@/constants/spacing";
 import { textSizes, textWeights } from "@/constants/text";
-import RecordButton from "../buttons/recordButton";
-import DefaultInput from "../inputs/defaultInput";
-import SubmitButton from "../buttons/submitButton";
 import { createSplit } from "@/db/queries/splits/createSplit";
-import { definitions } from "@/constants/definitions";
+import { ChevronLeft } from "lucide-react-native";
+import React, { useState } from "react";
+import { Dimensions, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import AdBanner from "../ads/adBanner";
+import RecordButton from "../buttons/recordButton";
+import SubmitButton from "../buttons/submitButton";
+import DefaultInput from "../inputs/defaultInput";
 
 const { width } = Dimensions.get("window");
 
@@ -84,8 +85,11 @@ const CreateNewSplit: React.FC<Props> = ({
             </Text>
             <RecordButton
                 theme={theme}
-                style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg }}
+                style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg, flexDirection: "column" }}
             >
+                <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
+                    <AdBanner />
+                </View>
                 <SubmitButton theme={theme} text={"Create split"} onPress={() => handleCreateNewSplit()} />
             </RecordButton>
         </View>
