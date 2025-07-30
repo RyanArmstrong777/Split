@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import RecordButton from './buttons/recordButton';
 import { spacing } from '@/constants/spacing';
@@ -7,15 +7,17 @@ import { ShopProduct } from '@/constants/types';
 import { setItemPurchased } from '@/db/queries/shop/setItemPurchased';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useAppSettingsContext } from '@/contexts/appSettingsContext';
+import * as InAppPurchases from 'expo-in-app-purchases';
 
 type Props = {
     item: ShopProduct;
     theme: any;
     showPrice?: boolean;
-    viewShopItem?: (item: ShopProduct) => void 
+    viewShopItem?: (item: ShopProduct) => void
+    purchaseFunction: (productId: string) => void
 };
 
-const ShopItemCard: React.FC<Props> = ({ item, theme, showPrice, viewShopItem }) => {
+const ShopItemCard: React.FC<Props> = ({ item, theme, showPrice, viewShopItem, purchaseFunction }) => {
 
     const db = useSQLiteContext()
     const { triggerRefresh } = useAppSettingsContext()
@@ -48,11 +50,11 @@ const ShopItemCard: React.FC<Props> = ({ item, theme, showPrice, viewShopItem })
                         </Text>
                     </Pressable>
                     {showPrice && (
-                        <View style={[styles.actionButton, { backgroundColor: theme.background, marginRight: "auto" }]}>
+                        <Pressable style={[styles.actionButton, { backgroundColor: theme.background, marginRight: "auto" }]} onPress={() => purchaseFunction(item.title.toLowerCase().replace(/\s+/g, '_'))}>
                             <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular }}>
                                 £{item.price}
                             </Text>
-                        </View>
+                        </Pressable>
                     )}
                     {viewShopItem && (
                         <Pressable

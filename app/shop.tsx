@@ -6,7 +6,6 @@ import { ShopProduct } from "@/constants/types";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { useSplitContext } from "@/contexts/splitContext";
 import { useThemeContext } from "@/contexts/themeContext";
-import { removeAds } from "@/db/queries/app_settings/removeAds";
 import { getAllProducts } from "@/db/queries/shop/getAllProducts";
 import { setItemPurchased } from "@/db/queries/shop/setItemPurchased";
 import { useFocusEffect } from "expo-router";
@@ -15,13 +14,25 @@ import { ChevronLeft } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { spacing } from "../constants/spacing";
+import * as InAppPurchases from 'expo-in-app-purchases';
+import { removeAds } from "@/db/queries/app_settings/removeAds";
+import { seedArnoldSplit } from "@/db/seeders/shop_products/ArnoldSchwarzenegger";
+import { seedChrisBumsteadSplit } from "@/db/seeders/shop_products/ChrisBumstead";
+import { seedDavidLaidSplit } from "@/db/seeders/shop_products/DavidLaid";
+import { seedGregDoucetteSplit } from "@/db/seeders/shop_products/GregDoucette";
+import { seedJeffCavaliereSplit } from "@/db/seeders/shop_products/JeffCavaliere";
+import { seedJeffNippardSplit } from "@/db/seeders/shop_products/JeffNippard";
+import { seedJeremyEthierSplit } from "@/db/seeders/shop_products/JeremyEthier";
+import { seedNickWalkerSplit } from "@/db/seeders/shop_products/NickWalker";
+import { seedOmarIsufSplit } from "@/db/seeders/shop_products/OmarIsuf";
+import { seedSamSulekSplit } from "@/db/seeders/shop_products/SamSulek";
 
 const { width, height } = Dimensions.get("window");
 
 export default function AnalyticsScreen() {
 
     const { theme } = useThemeContext()
-    const { refreshKey, triggerRefresh, settings } = useAppSettingsContext();
+    const { refreshKey, triggerRefresh } = useAppSettingsContext();
     const { split } = useSplitContext()
     const db = useSQLiteContext()
 
@@ -34,6 +45,82 @@ export default function AnalyticsScreen() {
         }
         mainRef.current?.scrollTo({x: item ? width : 0})
     }
+
+    useEffect(() => {
+        InAppPurchases.connectAsync();
+        return () => {
+            InAppPurchases.disconnectAsync();
+        };
+    }, []);
+
+    const [products, setProducts] = useState<InAppPurchases.IAPItemDetails[]>([]);
+
+    async function getProducts() {
+        const { responseCode, results } = await InAppPurchases.getProductsAsync(['remove_ads']);
+        if (responseCode === InAppPurchases.IAPResponseCode.OK && results) {
+            setProducts(results);
+        }
+    };
+
+    const handleBuy = async (productId: string) => {
+        await InAppPurchases.purchaseItemAsync(productId);
+    };
+
+    useEffect(() => {
+        InAppPurchases.setPurchaseListener(({ responseCode, results, errorCode }) => {
+            if (responseCode === InAppPurchases.IAPResponseCode.OK && results) {
+                results.forEach(async (purchase) => {
+                    if (!purchase.acknowledged) {
+                        if (purchase.productId === 'remove_ads') {
+                            removeAds(db)
+                            return
+                        }
+                        if (purchase.productId === 'arnold_inspired') {
+                            seedArnoldSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'cbum_inspired') {
+                            seedChrisBumsteadSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'david_laid_inspired') {
+                            seedDavidLaidSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'greg_doucette_inspired') {
+                            seedGregDoucetteSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'jeff_cavalier_inspired') {
+                            seedJeffCavaliereSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'jeff_nippard_inspired') {
+                            seedJeffNippardSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'jeremy_ethier_inspired') {
+                            seedJeremyEthierSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'nick_walker_inspired') {
+                            seedNickWalkerSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'omar_isuf_inspired') {
+                            seedOmarIsufSplit(db)
+                            return
+                        }
+                        if (purchase.productId === 'sam_sulek_inspired') {
+                            seedSamSulekSplit(db)
+                            return
+                        }
+                        await InAppPurchases.finishTransactionAsync(purchase, true);
+                    }
+                });
+            }
+        });
+    }, []);
 
     const [items, setItems] = useState<ShopProduct[] | null>(null)
 
@@ -60,11 +147,6 @@ export default function AnalyticsScreen() {
         setItems(products)
     }
 
-    async function handleRemoveAds() {
-        removeAds(db)
-        triggerRefresh()
-    }
-
     useFocusEffect(
         useCallback(() => {
             getShopProducts()
@@ -80,13 +162,13 @@ export default function AnalyticsScreen() {
                 <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>
                     Purchase splits used by your favourite athletes!
                 </Text>
-                <SubmitButton theme={theme} onPress={() => settings?.removeAds === 1 ? {} : handleRemoveAds()} text={settings?.removeAds === 1 ? "Ads removed. Thanks!" : "Remove ads - £4.99"} style={{marginTop: spacing.sm}} />
+                <SubmitButton theme={theme} onPress={() => handleBuy('remove_ads')} text="Remove ads - £4.99" style={{marginTop: spacing.sm}} />
             </View>
             <ScrollView style={{flex: 1}} horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={mainRef} scrollEnabled={false}>
                 <ScrollView style={{width}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: spacing.lg, gap: spacing.sm}}>
                     {items?.map((item, index) => (
                         <View key={index}>
-                            <ShopItemCard item={item} theme={theme} viewShopItem={viewShopItem} />
+                            <ShopItemCard item={item} theme={theme} viewShopItem={viewShopItem} purchaseFunction={handleBuy}/>
                         </View>
                     ))}
                 </ScrollView>
