@@ -159,19 +159,19 @@ export default function AnalyticsScreen() {
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={editRef} scrollEnabled={false}>
                 <View style={{flex: 1}}>
                     <View style={[styles.container, {paddingHorizontal: spacing.lg * 2, flex: 0}]}>
-                        <View style={{flexDirection: "row", paddingTop: spacing.lg}}>
+                        <View style={{flexDirection: "row", paddingTop: spacing.lg, flex: 1}}>
                             <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold}}>Analytics</Text>
                             <DateTimePicker
                                 value={new Date(startDate)}
                                 mode="date"
                                 display="default"
-                                style={{flex: 1, marginVertical: "auto", paddingRight: spacing.lg}}
+                                style={{flex: 1, marginVertical: "auto", marginLeft: "auto"}}
                                 textColor={theme.text}
                                 themeVariant={theme.mode as "light" | "dark"}
                                 onChange={onChange}
                             />
                         </View>
-                        <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm, paddingBottom: settings?.removeAds === 1 ? spacing.lg : 0}} horizontal showsHorizontalScrollIndicator={false}>
+                        <ScrollView style={styles.timeframeContainer} contentContainerStyle={{gap: spacing.sm, paddingBottom: settings?.removeAds === 1 ? spacing.md : 0}} horizontal showsHorizontalScrollIndicator={false}>
                             <Pressable style={[styles.timeframe, {backgroundColor: timeframe === "Week" ? theme.text : theme.card}]} onPress={() => setTimeframe("Week")}>
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Week" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Week</Text>
                             </Pressable>
@@ -182,9 +182,7 @@ export default function AnalyticsScreen() {
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Year" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Year</Text>
                             </Pressable>
                         </ScrollView>
-                        <View style={{alignItems: "center", width: "100%", paddingTop: spacing.sm, paddingBottom: spacing.lg}}>
-                            <AdBanner />
-                        </View>
+                        <AdBanner style={{alignItems: "center", width: "100%", paddingBottom: spacing.sm}}/>
                     </View>
 
                     <ScrollView style={{flex: 1, gap: spacing.lg}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: spacing.lg}} ref={mainRef}>

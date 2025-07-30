@@ -1,12 +1,12 @@
-import { SQLiteProvider } from "expo-sqlite";
+import Navbar from "@/components/navbar";
+import ThemedBackground from "@/components/themedBackground";
+import { AppSettingsProvider } from "@/contexts/appSettingsContext";
+import { SplitProvider } from "@/contexts/splitContext";
+import { ThemeProvider } from "@/contexts/themeContext";
 import runSeeder from "@/db/seeder";
 import { Tabs } from "expo-router";
-import Navbar from "@/components/navbar";
-import { ThemeProvider } from "@/contexts/themeContext";
-import ThemedBackground from "@/components/themedBackground";
-import { SplitProvider } from "@/contexts/splitContext";
-import { AppSettingsProvider } from "@/contexts/appSettingsContext";
-import { View, SafeAreaView } from "react-native";
+import { SQLiteProvider } from "expo-sqlite";
+import { SafeAreaView, View } from "react-native";
 
 function InnerApp() {
 

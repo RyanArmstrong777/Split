@@ -1,21 +1,27 @@
+import { useAppSettingsContext } from '@/contexts/appSettingsContext';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
 
 const adUnitId = __DEV__ ? TestIds.BANNER : 'your-production-ad-id';
 
-export default function AdBanner() {
+interface AdBannerProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+export default function AdBanner({ style }: AdBannerProps) {
+  const { settings } = useAppSettingsContext();
+
+  if (settings?.removeAds === 1) return null;
+
   return (
-    <BannerAd
+    <View style={style}>
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.BANNER}
         requestOptions={{
-            requestNonPersonalizedAdsOnly: true,
+          requestNonPersonalizedAdsOnly: true,
         }}
-        onAdLoaded={() => {
-            console.log('Ad loaded');
-        }}
-        onAdFailedToLoad={(error) => {
-            console.error('Ad failed to load: ', error);
-        }}
-    />
+      />
+    </View>
   );
 }

@@ -180,9 +180,8 @@ export default function SettingsScreen() {
                     </ScrollView>
                 </View>
             </ScrollView>
-            <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
-                <AdBanner />
-            </View>
+
+            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} />
         </View> 
     )
 }

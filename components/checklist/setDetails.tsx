@@ -169,7 +169,7 @@ const SetDetails = ({
                         keyboardType="numeric"
                         style={{ display: recordWeight ? "flex" : "none" }}
                     />
-                    <Switch value={recordWeight} onValueChange={() => setRecordWeight(!recordWeight)} />
+                    <Switch value={recordWeight} onValueChange={() => setRecordWeight(!recordWeight)}/>
                 </RecordButton>
 
                 <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>

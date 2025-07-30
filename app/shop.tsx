@@ -6,6 +6,7 @@ import { ShopProduct } from "@/constants/types";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 import { useSplitContext } from "@/contexts/splitContext";
 import { useThemeContext } from "@/contexts/themeContext";
+import { removeAds } from "@/db/queries/app_settings/removeAds";
 import { getAllProducts } from "@/db/queries/shop/getAllProducts";
 import { setItemPurchased } from "@/db/queries/shop/setItemPurchased";
 import { useFocusEffect } from "expo-router";
@@ -20,7 +21,7 @@ const { width, height } = Dimensions.get("window");
 export default function AnalyticsScreen() {
 
     const { theme } = useThemeContext()
-    const { refreshKey, triggerRefresh } = useAppSettingsContext();
+    const { refreshKey, triggerRefresh, settings } = useAppSettingsContext();
     const { split } = useSplitContext()
     const db = useSQLiteContext()
 
@@ -59,6 +60,11 @@ export default function AnalyticsScreen() {
         setItems(products)
     }
 
+    async function handleRemoveAds() {
+        removeAds(db)
+        triggerRefresh()
+    }
+
     useFocusEffect(
         useCallback(() => {
             getShopProducts()
@@ -74,7 +80,7 @@ export default function AnalyticsScreen() {
                 <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>
                     Purchase splits used by your favourite athletes!
                 </Text>
-                <SubmitButton theme={theme} onPress={() => {}} text="Remove ads - £4.99" style={{marginTop: spacing.sm}} />
+                <SubmitButton theme={theme} onPress={() => settings?.removeAds === 1 ? {} : handleRemoveAds()} text={settings?.removeAds === 1 ? "Ads removed. Thanks!" : "Remove ads - £4.99"} style={{marginTop: spacing.sm}} />
             </View>
             <ScrollView style={{flex: 1}} horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={mainRef} scrollEnabled={false}>
                 <ScrollView style={{width}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: spacing.lg, gap: spacing.sm}}>

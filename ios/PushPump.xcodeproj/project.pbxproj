@@ -13,6 +13,7 @@
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
 		9B467A7595005A64B0B75C0C /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AE08756CAC800DA107858A16 /* PrivacyInfo.xcprivacy */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
+		DA3DEB3F2E38FCA600A744A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA3DEB3E2E38FCA600A744A6 /* StoreKit.framework */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,8 +26,9 @@
 		5ECC92866C55CB4E5FB9EA67 /* Pods-PushPump.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PushPump.release.xcconfig"; path = "Target Support Files/Pods-PushPump/Pods-PushPump.release.xcconfig"; sourceTree = "<group>"; };
 		65D6BD030438C4710B111027 /* Pods-PushPump.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PushPump.debug.xcconfig"; path = "Target Support Files/Pods-PushPump/Pods-PushPump.debug.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = PushPump/SplashScreen.storyboard; sourceTree = "<group>"; };
-		AE08756CAC800DA107858A16 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = PushPump/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		AE08756CAC800DA107858A16 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = PushPump/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		DA3DEB3E2E38FCA600A744A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = PushPump/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* PushPump-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "PushPump-Bridging-Header.h"; path = "PushPump/PushPump-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -38,6 +40,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CAB1F49D948E4CCC0F99A35 /* Pods_PushPump.framework in Frameworks */,
+				DA3DEB3F2E38FCA600A744A6 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +64,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DA3DEB3E2E38FCA600A744A6 /* StoreKit.framework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				0C85130D138331C1D60FE1A4 /* Pods_PushPump.framework */,
 			);
@@ -73,7 +77,6 @@
 				65D6BD030438C4710B111027 /* Pods-PushPump.debug.xcconfig */,
 				5ECC92866C55CB4E5FB9EA67 /* Pods-PushPump.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

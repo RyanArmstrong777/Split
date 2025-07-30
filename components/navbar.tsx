@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Pressable, StyleSheet, Dimensions } from 'react-native';
-import { ShoppingBag, NotebookPen, Dumbbell, ChartNoAxesColumnIncreasing, Settings } from 'lucide-react-native';
-import { textSizes } from '../constants/text';
-import { spacing } from '../constants/spacing';
 import { useThemeContext } from '@/contexts/themeContext';
-import { darkTheme } from '../constants/colors';
 import { router } from 'expo-router';
+import { ChartNoAxesColumnIncreasing, Dumbbell, NotebookPen, Settings, ShoppingBag } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
+import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
+import { darkTheme } from '../constants/colors';
+import { spacing } from '../constants/spacing';
+import { textSizes } from '../constants/text';
 
 const { width, height } = Dimensions.get("window");
 
@@ -88,6 +88,8 @@ const shadowStyle = {
 const styles = StyleSheet.create({
     container: {
         width,
+        maxWidth: 800,
+        marginHorizontal: "auto",
         padding: spacing.lg,
         gap: spacing.lg,
         flexDirection: "row",

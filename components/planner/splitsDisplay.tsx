@@ -103,9 +103,7 @@ export default function SplitsDisplay({
             >
                 {definitions.split}
             </Text>
-            <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
-                <AdBanner />
-            </View>
+            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}/>
         </View>
     );
 }

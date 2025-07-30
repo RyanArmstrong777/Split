@@ -2,6 +2,7 @@ import { definitions } from '@/constants/definitions';
 import { spacing } from '@/constants/spacing';
 import { textSizes, textWeights } from '@/constants/text';
 import { CompletedExercise, CompletedWorkout, Theme, Workout } from '@/constants/types';
+import { useAppSettingsContext } from '@/contexts/appSettingsContext';
 import { createCompletedExercise } from '@/db/queries/completed_exercises/createCompletedExercise';
 import { getActiveCompletedExercisesForDate } from '@/db/queries/completed_exercises/getActiveCompletedExercisesForDate';
 import { SQLiteDatabase } from 'expo-sqlite';
@@ -29,6 +30,7 @@ const { width, height } = Dimensions.get("window")
 
 const ExercisesChecklist = ({theme, db, selectedWorkout, goToPage, splitId, refreshExercises, setRefreshExercises, setSelectedExercise, selectedDate}: ExercisesChecklistProps) => {
 
+    const { settings } = useAppSettingsContext()
     const [exercises, setExercises] = useState([] as CompletedExercise[])
     const [newExerciseName, setNewExerciseName] = useState("")
     const [newRestInterval, setNewRestInterval] = useState("")
@@ -83,8 +85,8 @@ const ExercisesChecklist = ({theme, db, selectedWorkout, goToPage, splitId, refr
                     </Pressable>
                 </RecordButton>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <RecordButton theme={theme} style={{paddingVertical: spacing.md, justifyContent: "center"}}>
-                        <AdBanner />
+                    <RecordButton theme={theme} style={{justifyContent: "center", flexShrink: 1}}>
+                        <AdBanner style={{marginVertical: spacing.md}}/>
                     </RecordButton>
                     {exercises.map((exercise, index) => (
                         <RecordButton

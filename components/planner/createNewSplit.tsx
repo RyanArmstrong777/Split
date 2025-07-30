@@ -87,9 +87,9 @@ const CreateNewSplit: React.FC<Props> = ({
                 theme={theme}
                 style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg, flexDirection: "column" }}
             >
-                <View style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}>
-                    <AdBanner />
-                </View>
+
+                <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}/>
+                
                 <SubmitButton theme={theme} text={"Create split"} onPress={() => handleCreateNewSplit()} />
             </RecordButton>
         </View>

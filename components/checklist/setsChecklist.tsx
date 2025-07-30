@@ -93,7 +93,7 @@ const SetsChecklist = ({
                         </Text>
 
                         { (set.targetWeight != null || set.weight != null) && (
-                            <Text style={[styles.weightText, { color: theme.text, marginRight: "auto" }]}>
+                            <Text style={{ fontSize: textSizes.sm, color: theme.text, marginRight: "auto" }}>
                                 {`${set.targetWeight != null && !set.completed 
                                 ? (settings?.weightUnit === "kg" ? set.targetWeight.toFixed(1) : formatWeight(set.targetWeight).toFixed(1)) 
                                 : (settings?.weightUnit === "kg" ? set.weight?.toFixed(1) : (set.weight != null ? formatWeight(set.weight).toFixed(1) : "-"))} ${weightUnits}`}
@@ -101,13 +101,13 @@ const SetsChecklist = ({
                         )}
 
                         { (set.targetReps != null || set.reps != null) && (
-                            <Text style={{ color: theme.text, marginLeft: (set.weight) ? "auto" : 0, marginRight: (!set.targetWeight && !set.weight) ? "auto" : 0 }}>
+                            <Text style={{ fontSize: textSizes.sm, color: theme.text, marginLeft: (set.weight) ? "auto" : 0, marginRight: (!set.targetWeight && !set.weight) ? "auto" : 0 }}>
                                 {`${set.targetReps != null && !set.completed ? set.targetReps : set.reps} reps`}
                             </Text>
                         )}
 
                         { (set.targetTime != null || set.time != null) && (
-                            <Text style={{ color: theme.text, marginLeft: ((set.targetReps || set.reps) || (!set.targetWeight && !set.weight)) ? 0 : "auto"}}>
+                            <Text style={{ fontSize: textSizes.sm, color: theme.text, marginLeft: ((set.targetReps || set.reps) || (!set.targetWeight && !set.weight)) ? 0 : "auto"}}>
                                 {`${set.targetTime != null && !set.completed ? set.targetTime : set.time}s`}
                             </Text>
                         )}

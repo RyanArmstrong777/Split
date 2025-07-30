@@ -1,7 +1,7 @@
 export async function seedDavidLaidSplit(db: any) {
     const result = await db.runAsync(
         `INSERT INTO splits (name, description) VALUES (?, ?)`,
-        ["David Laid PPL", "6-day powerbuilding split blending heavy strength work with hypertrophy-focused accessories"]
+        ["David Laid Inspired", "6-day powerbuilding split blending heavy strength work with hypertrophy-focused accessories"]
     );
 
     const splitId = result.lastInsertRowId;

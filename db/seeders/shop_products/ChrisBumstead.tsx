@@ -88,7 +88,6 @@ export async function seedChrisBumsteadSplit(db: any) {
                 [workoutId, exercise.name, exercise.rest_interval]
             );
             const exerciseId = exerciseRes.lastInsertRowId;
-            console.log(exerciseId)
 
             for (let i = 0; i < (exercise.sets || []).length; i++) {
                 const set = exercise.sets[i];

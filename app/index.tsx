@@ -1,19 +1,19 @@
-import { StyleSheet, Dimensions, View, Text } from "react-native";
-import { useState, useEffect, useRef } from "react";
-import { useThemeContext } from "@/contexts/themeContext";
-import WeeklyCalendar from "../components/weeklyCalendar";
-import { spacing } from "../constants/spacing";
-import { useSQLiteContext } from "expo-sqlite";
-import WorkoutChecklist from "../components/workoutsChecklist";
-import HeaderSlideshow from "../components/HeaderSlideshow";
-import { useSplitContext } from "@/contexts/splitContext";
-import { getActiveCompletedWorkoutsForWeek } from "@/db/queries/completed_workouts.tsx/getActiveCompletedWorkoutsForWeek";
+import { textSizes, textWeights } from "@/constants/text";
 import { CompletedWorkout, Workout } from "@/constants/types";
 import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { getLastMonday } from "@/utilities/getLastMonday";
+import { useSplitContext } from "@/contexts/splitContext";
+import { useThemeContext } from "@/contexts/themeContext";
+import { getActiveCompletedWorkoutsForWeek } from "@/db/queries/completed_workouts.tsx/getActiveCompletedWorkoutsForWeek";
 import { scheduleSplit } from "@/db/queries/splits/scheduleSplit";
 import { getDateAsDayNumber } from "@/utilities/getDateAsDayNumber";
-import { textSizes, textWeights } from "@/constants/text";
+import { getLastMonday } from "@/utilities/getLastMonday";
+import { useSQLiteContext } from "expo-sqlite";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import HeaderSlideshow from "../components/HeaderSlideshow";
+import WeeklyCalendar from "../components/weeklyCalendar";
+import WorkoutChecklist from "../components/workoutsChecklist";
+import { spacing } from "../constants/spacing";
 
 const { width, height } = Dimensions.get("window");
 
