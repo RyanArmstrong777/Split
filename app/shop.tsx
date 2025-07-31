@@ -67,57 +67,48 @@ export default function AnalyticsScreen() {
     };
 
     useEffect(() => {
-        InAppPurchases.setPurchaseListener(({ responseCode, results, errorCode }) => {
+        InAppPurchases.setPurchaseListener(async ({ responseCode, results, errorCode }) => {
             if (responseCode === InAppPurchases.IAPResponseCode.OK && results) {
-                results.forEach(async (purchase) => {
+                for (const purchase of results) {
                     if (!purchase.acknowledged) {
-                        if (purchase.productId === 'remove_ads') {
-                            removeAds(db)
-                            return
-                        }
-                        if (purchase.productId === 'arnold_inspired') {
-                            seedArnoldSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'cbum_inspired') {
-                            seedChrisBumsteadSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'david_laid_inspired') {
-                            seedDavidLaidSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'greg_doucette_inspired') {
-                            seedGregDoucetteSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'jeff_cavalier_inspired') {
-                            seedJeffCavaliereSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'jeff_nippard_inspired') {
-                            seedJeffNippardSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'jeremy_ethier_inspired') {
-                            seedJeremyEthierSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'nick_walker_inspired') {
-                            seedNickWalkerSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'omar_isuf_inspired') {
-                            seedOmarIsufSplit(db)
-                            return
-                        }
-                        if (purchase.productId === 'sam_sulek_inspired') {
-                            seedSamSulekSplit(db)
-                            return
-                        }
-                        await InAppPurchases.finishTransactionAsync(purchase, true);
+                    switch (purchase.productId) {
+                        case 'remove_ads':
+                        removeAds(db);
+                        break;
+                        case 'arnold_inspired':
+                        seedArnoldSplit(db);
+                        break;
+                        case 'cbum_inspired':
+                        seedChrisBumsteadSplit(db);
+                        break;
+                        case 'david_laid_inspired':
+                        seedDavidLaidSplit(db);
+                        break;
+                        case 'greg_doucette_inspired':
+                        seedGregDoucetteSplit(db);
+                        break;
+                        case 'jeff_cavaliere_inspired':
+                        seedJeffCavaliereSplit(db);
+                        break;
+                        case 'jeff_nippard_inspired':
+                        seedJeffNippardSplit(db);
+                        break;
+                        case 'jeremy_ethier_inspired':
+                        seedJeremyEthierSplit(db);
+                        break;
+                        case 'nick_walker_inspired':
+                        seedNickWalkerSplit(db);
+                        break;
+                        case 'omar_isuf_inspired':
+                        seedOmarIsufSplit(db);
+                        break;
+                        case 'sam_sulek_inspired':
+                        seedSamSulekSplit(db);
+                        break;
                     }
-                });
+                    await InAppPurchases.finishTransactionAsync(purchase, true);
+                    }
+                }
             }
         });
     }, []);

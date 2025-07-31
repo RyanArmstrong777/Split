@@ -14,7 +14,7 @@ type Props = {
     theme: any;
     showPrice?: boolean;
     viewShopItem?: (item: ShopProduct) => void
-    purchaseFunction: (productId: string) => void
+    purchaseFunction?: (productId: string) => void
 };
 
 const ShopItemCard: React.FC<Props> = ({ item, theme, showPrice, viewShopItem, purchaseFunction }) => {
@@ -49,7 +49,7 @@ const ShopItemCard: React.FC<Props> = ({ item, theme, showPrice, viewShopItem, p
                             {(item.purchased === 1) ? "Purchased" : `+ £${item.price}`}
                         </Text>
                     </Pressable>
-                    {showPrice && (
+                    {showPrice && purchaseFunction && (
                         <Pressable style={[styles.actionButton, { backgroundColor: theme.background, marginRight: "auto" }]} onPress={() => purchaseFunction(item.title.toLowerCase().replace(/\s+/g, '_'))}>
                             <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular }}>
                                 £{item.price}
