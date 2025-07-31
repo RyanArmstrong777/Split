@@ -119,7 +119,7 @@ const ScheduleEditor = ({
                 <SetEditor goToSection={goToSection} theme={theme} weightUnits={settings?.weightUnit} refreshSets={refreshSets} setRefreshSets={setRefreshSets} selectedSet={selectedSet} setSelectedSet={setSelectedSet} db={db} />
             </ScrollView>
 
-            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} />
+            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} id={"ca-app-pub-9362350160554339/9890770561"}/>
 
         </View>
     );

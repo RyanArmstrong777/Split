@@ -182,7 +182,7 @@ export default function AnalyticsScreen() {
                                 <Text style={{fontSize: textSizes.sm, color: timeframe === "Year" ? theme.background : theme.text, fontWeight: textWeights.regular}}>Year</Text>
                             </Pressable>
                         </ScrollView>
-                        <AdBanner style={{alignItems: "center", width: "100%", paddingBottom: spacing.sm}}/>
+                        <AdBanner style={{alignItems: "center", width: "100%", paddingBottom: spacing.sm}} id={"ca-app-pub-9362350160554339/5748345572"}/>
                     </View>
 
                     <ScrollView style={{flex: 1, gap: spacing.lg}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingBottom: spacing.lg}} ref={mainRef}>

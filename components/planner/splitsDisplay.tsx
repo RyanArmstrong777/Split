@@ -103,7 +103,7 @@ export default function SplitsDisplay({
             >
                 {definitions.split}
             </Text>
-            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}/>
+            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} id={"ca-app-pub-9362350160554339/3800839084"}/>
         </View>
     );
 }

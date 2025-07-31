@@ -86,7 +86,7 @@ const ExercisesChecklist = ({theme, db, selectedWorkout, goToPage, splitId, refr
                 </RecordButton>
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <RecordButton theme={theme} style={{justifyContent: "center", flexShrink: 1}}>
-                        <AdBanner style={{marginVertical: spacing.md}}/>
+                        <AdBanner style={{marginVertical: spacing.md}} id={"ca-app-pub-9362350160554339/8051360690"}/>
                     </RecordButton>
                     {exercises.map((exercise, index) => (
                         <RecordButton

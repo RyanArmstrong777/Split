@@ -245,7 +245,7 @@ export default function SettingsScreen() {
                 </View>
             </ScrollView>
 
-            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} />
+            <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} id={"ca-app-pub-9362350160554339/8670022380"}/>
         </View> 
     )
 }
