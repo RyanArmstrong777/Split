@@ -1,4 +1,4 @@
-import { CompletedExercise } from "@/constants/types";
+import { CompletedExercise } from "../../../constants/types";
 
 type CreateCompletedExerciseParams = {
   name: string;

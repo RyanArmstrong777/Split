@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { darkTheme, lightTheme } from '@/constants/colors';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { darkTheme, lightTheme } from '../constants/colors';
 import { useAppSettingsContext } from './appSettingsContext';
 
 interface ThemeContextProps {

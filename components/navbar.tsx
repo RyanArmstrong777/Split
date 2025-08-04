@@ -1,4 +1,3 @@
-import { useThemeContext } from '@/contexts/themeContext';
 import { router } from 'expo-router';
 import { ChartNoAxesColumnIncreasing, Dumbbell, NotebookPen, Settings, ShoppingBag } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
@@ -6,6 +5,7 @@ import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { darkTheme } from '../constants/colors';
 import { spacing } from '../constants/spacing';
 import { textSizes } from '../constants/text';
+import { useThemeContext } from '../contexts/themeContext';
 
 const { width, height } = Dimensions.get("window");
 

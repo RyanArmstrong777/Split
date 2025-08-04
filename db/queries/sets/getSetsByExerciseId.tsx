@@ -1,4 +1,4 @@
-import { Set } from "@/constants/types";
+import { Set } from "../../../constants/types";
 
 export async function getSetsByExerciseId(db: any, exerciseId: number): Promise<Set[]> {
     const rows: Set[] = await db.getAllAsync(

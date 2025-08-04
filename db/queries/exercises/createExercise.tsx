@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { Exercise } from "@/constants/types";
+import { Exercise } from "../../../constants/types";
 
 export async function createExercise(db: SQLiteDatabase, workoutId: number, name: string, restInterval: number): Promise<Exercise> {
 

@@ -1,8 +1,8 @@
-import { AppSettings } from '@/constants/types';
-import { getAppSettings } from '@/db/queries/app_settings/getAppSettings';
-import { updateAppSettings } from '@/db/queries/app_settings/updateAppSettings';
 import { useSQLiteContext } from 'expo-sqlite';
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { AppSettings } from '../constants/types';
+import { getAppSettings } from '../db/queries/app_settings/getAppSettings';
+import { updateAppSettings } from '../db/queries/app_settings/updateAppSettings';
 
 interface AppSettingsContextProps {
     settings: AppSettings | null;

@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { Set } from "@/constants/types";
+import { Set } from "../../../constants/types";
 
 type Params = {
     db: SQLiteDatabase;

@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from 'expo-sqlite';
-import { BodyMetrics } from '@/constants/types';
+import { BodyMetrics } from '../../../constants/types';
 
 export async function retrieveBodyMetricsHistory(db: SQLiteDatabase): Promise<BodyMetrics[]> {
     const results = await db.getAllAsync(`SELECT * FROM body_metrics`);

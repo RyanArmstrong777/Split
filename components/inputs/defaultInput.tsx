@@ -1,8 +1,8 @@
 import React from "react";
-import { View, TextInput, StyleSheet, ViewStyle } from "react-native";
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Theme } from "@/constants/types";
+import { StyleSheet, TextInput, View, ViewStyle } from "react-native";
+import { spacing } from "../../constants/spacing";
+import { textSizes, textWeights } from "../../constants/text";
+import { Theme } from "../../constants/types";
 
 type Props = {
   value: string

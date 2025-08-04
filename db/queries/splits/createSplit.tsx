@@ -1,4 +1,4 @@
-import { Split } from "@/constants/types";
+import { Split } from "../../../constants/types";
 
 export async function createSplit(db: any, name: string): Promise<Split> {
 

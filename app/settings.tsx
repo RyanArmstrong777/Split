@@ -1,31 +1,31 @@
-import AdBanner from "@/components/ads/adBanner"
-import RecordButton from "@/components/buttons/recordButton"
-import ShopItemCard from "@/components/shopItem"
-import { spacing } from "@/constants/spacing"
-import { textSizes, textWeights } from "@/constants/text"
-import { ShopProduct } from "@/constants/types"
-import { useAppSettingsContext } from "@/contexts/appSettingsContext"
-import { useThemeContext } from "@/contexts/themeContext"
-import { getAllProducts } from "@/db/queries/shop/getAllProducts"
-import runSeeder from "@/db/seeder"
-import deleteTables from "@/db/utilities/deleteTables"
+import * as InAppPurchases from 'expo-in-app-purchases'
 import { useFocusEffect } from "expo-router"
 import { useSQLiteContext } from "expo-sqlite"
 import { Bell, Check, ChevronLeft, ChevronRight, Dumbbell, Eraser, Moon, RefreshCw, ShoppingCart, Vibrate } from "lucide-react-native"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Dimensions, Pressable, ScrollView, StyleSheet, Switch, Text, Vibration, View } from "react-native"
-import { removeAds } from "@/db/queries/app_settings/removeAds";
-import { seedArnoldSplit } from "@/db/seeders/shop_products/ArnoldSchwarzenegger";
-import { seedChrisBumsteadSplit } from "@/db/seeders/shop_products/ChrisBumstead";
-import { seedDavidLaidSplit } from "@/db/seeders/shop_products/DavidLaid";
-import { seedGregDoucetteSplit } from "@/db/seeders/shop_products/GregDoucette";
-import { seedJeffCavaliereSplit } from "@/db/seeders/shop_products/JeffCavaliere";
-import { seedJeffNippardSplit } from "@/db/seeders/shop_products/JeffNippard";
-import { seedJeremyEthierSplit } from "@/db/seeders/shop_products/JeremyEthier";
-import { seedNickWalkerSplit } from "@/db/seeders/shop_products/NickWalker";
-import { seedOmarIsufSplit } from "@/db/seeders/shop_products/OmarIsuf";
-import { seedSamSulekSplit } from "@/db/seeders/shop_products/SamSulek";
-import * as InAppPurchases from 'expo-in-app-purchases';
+import AdBanner from "../components/ads/adBanner"
+import RecordButton from "../components/buttons/recordButton"
+import ShopItemCard from "../components/shopItem"
+import { spacing } from "../constants/spacing"
+import { textSizes, textWeights } from "../constants/text"
+import { ShopProduct } from "../constants/types"
+import { useAppSettingsContext } from "../contexts/appSettingsContext"
+import { useThemeContext } from "../contexts/themeContext"
+import { removeAds } from "../db/queries/app_settings/removeAds"
+import { getAllProducts } from "../db/queries/shop/getAllProducts"
+import runSeeder from "../db/seeder"
+import { seedArnoldSplit } from "../db/seeders/shop_products/ArnoldSchwarzenegger"
+import { seedChrisBumsteadSplit } from "../db/seeders/shop_products/ChrisBumstead"
+import { seedDavidLaidSplit } from "../db/seeders/shop_products/DavidLaid"
+import { seedGregDoucetteSplit } from "../db/seeders/shop_products/GregDoucette"
+import { seedJeffCavaliereSplit } from "../db/seeders/shop_products/JeffCavaliere"
+import { seedJeffNippardSplit } from "../db/seeders/shop_products/JeffNippard"
+import { seedJeremyEthierSplit } from "../db/seeders/shop_products/JeremyEthier"
+import { seedNickWalkerSplit } from "../db/seeders/shop_products/NickWalker"
+import { seedOmarIsufSplit } from "../db/seeders/shop_products/OmarIsuf"
+import { seedSamSulekSplit } from "../db/seeders/shop_products/SamSulek"
+import deleteTables from "../db/utilities/deleteTables"
 
 const { width } = Dimensions.get("window")
 

@@ -1,6 +1,6 @@
 import {
     CompletedExercise
-} from "@/constants/types";
+} from "../../../constants/types";
 
 export type CompletedExerciseWithDate = CompletedExercise & {
     startDate: string;

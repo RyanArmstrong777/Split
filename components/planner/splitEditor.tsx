@@ -1,13 +1,13 @@
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Split } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { useSplitContext } from "@/contexts/splitContext";
-import { deleteSplit } from "@/db/queries/splits/deleteSplit";
 import { SQLiteDatabase } from "expo-sqlite";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, Vibration, View, ViewStyle } from "react-native";
+import { spacing } from "../../constants/spacing";
+import { textSizes, textWeights } from "../../constants/text";
+import { Split } from "../../constants/types";
+import { useAppSettingsContext } from "../../contexts/appSettingsContext";
+import { useSplitContext } from "../../contexts/splitContext";
+import { deleteSplit } from "../../db/queries/splits/deleteSplit";
 import AdBanner from "../ads/adBanner";
 import RecordButton from "../buttons/recordButton";
 import SubmitButton from "../buttons/submitButton";
@@ -168,7 +168,7 @@ const SplitEditor: React.FC<Props> = ({
                 theme={theme}
                 style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg, flexDirection: "column" }}
             >
-                <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}/>
+                <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} id={"ca-app-pub-9362350160554339~7121422401"}/>
                 <SubmitButton
                     theme={theme}
                     text={"Set as active split"}

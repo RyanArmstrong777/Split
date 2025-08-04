@@ -1,4 +1,4 @@
-import { BodyMetrics } from "@/constants/types";
+import { BodyMetrics } from "../constants/types";
 
 type Timeframe = "Week" | "Month" | "Year";
 type Metric = "Weight" | "BF%" | "BMI";

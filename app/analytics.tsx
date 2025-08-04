@@ -1,17 +1,3 @@
-import AdBanner from "@/components/ads/adBanner";
-import RecordButton from "@/components/buttons/recordButton";
-import SubmitButton from "@/components/buttons/submitButton";
-import DefaultInput from "@/components/inputs/defaultInput";
-import { textSizes, textWeights } from "@/constants/text";
-import { BodyMetrics, ChartData, CompletedExerciseWithDate } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { useThemeContext } from "@/contexts/themeContext";
-import { retrieveBodyMetricsHistory } from "@/db/queries/body_metrics/retrieveBodyMetricsHistory";
-import { saveBodymetrics } from "@/db/queries/body_metrics/saveBodymetrics";
-import { getCompletedExercisesWithStartDate } from "@/db/queries/completed_exercises/getCompletedExercisesWithStartDate";
-import { formatBodyMetricsChartData } from "@/utilities/formatBodyMetricsChartData";
-import { formatExercisesChartData } from "@/utilities/formatExercisesChartData";
-import { getLastMonday } from "@/utilities/getLastMonday";
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSQLiteContext } from "expo-sqlite";
@@ -19,7 +5,21 @@ import { ChevronLeft, ChevronRight, Dumbbell, Pencil } from "lucide-react-native
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, Vibration, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
+import AdBanner from "../components/ads/adBanner";
+import RecordButton from "../components/buttons/recordButton";
+import SubmitButton from "../components/buttons/submitButton";
+import DefaultInput from "../components/inputs/defaultInput";
 import { spacing } from "../constants/spacing";
+import { textSizes, textWeights } from "../constants/text";
+import { BodyMetrics, ChartData, CompletedExerciseWithDate } from "../constants/types";
+import { useAppSettingsContext } from "../contexts/appSettingsContext";
+import { useThemeContext } from "../contexts/themeContext";
+import { retrieveBodyMetricsHistory } from "../db/queries/body_metrics/retrieveBodyMetricsHistory";
+import { saveBodymetrics } from "../db/queries/body_metrics/saveBodymetrics";
+import { getCompletedExercisesWithStartDate } from "../db/queries/completed_exercises/getCompletedExercisesWithStartDate";
+import { formatBodyMetricsChartData } from "../utilities/formatBodyMetricsChartData";
+import { formatExercisesChartData } from "../utilities/formatExercisesChartData";
+import { getLastMonday } from "../utilities/getLastMonday";
 
 const { width, height } = Dimensions.get("window");
 

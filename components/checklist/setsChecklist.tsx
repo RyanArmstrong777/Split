@@ -1,14 +1,14 @@
-import { spacing } from '@/constants/spacing';
-import { textSizes, textWeights } from '@/constants/text';
-import { CompletedExercise, CompletedSet, Theme } from '@/constants/types';
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
-import { createCompletedSet } from '@/db/queries/completed_sets/createCompletedSet';
-import { getActiveCompletedSets } from '@/db/queries/completed_sets/getActiveCompletedSets';
-import { formatWeight } from '@/utilities/formatWeight';
 import { SQLiteDatabase } from 'expo-sqlite';
 import { Check, ChevronLeft, ChevronRight, Plus } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
+import { spacing } from '../../constants/spacing';
+import { textSizes, textWeights } from '../../constants/text';
+import { CompletedExercise, CompletedSet, Theme } from '../../constants/types';
+import { useAppSettingsContext } from '../../contexts/appSettingsContext';
+import { createCompletedSet } from '../../db/queries/completed_sets/createCompletedSet';
+import { getActiveCompletedSets } from '../../db/queries/completed_sets/getActiveCompletedSets';
+import { formatWeight } from '../../utilities/formatWeight';
 import RecordButton from '../buttons/recordButton';
 import RestTimer from '../buttons/restTimer';
 

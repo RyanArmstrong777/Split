@@ -1,5 +1,5 @@
-import { Split } from "@/constants/types";
 import { SQLiteDatabase } from "expo-sqlite";
+import { Split } from "../../../constants/types";
 
 export function getActiveSplit(db: SQLiteDatabase): Promise<Split | null> {
   return new Promise((resolve, reject) => {

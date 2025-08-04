@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { Pressable, StyleSheet } from "react-native"
-import { spacing } from "@/constants/spacing"
-import { Theme } from "@/constants/types"
+import { spacing } from "../../constants/spacing"
+import { Theme } from "../../constants/types"
 
 type props = {
     children: ReactNode,

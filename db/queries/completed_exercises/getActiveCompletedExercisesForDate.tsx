@@ -1,5 +1,4 @@
-import { CompletedExercise } from "@/constants/types";
-import { useSplitContext } from "@/contexts/splitContext";
+import { CompletedExercise } from "../../../constants/types";
 
 export async function getActiveCompletedExercisesForDate(db: any, date: string, splitId: number): Promise<CompletedExercise[] | []> {
     try {

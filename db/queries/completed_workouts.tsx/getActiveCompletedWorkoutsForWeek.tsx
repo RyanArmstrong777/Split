@@ -1,4 +1,4 @@
-import { CompletedWorkout, Workout } from "@/constants/types";
+import { CompletedWorkout, Workout } from "../../../constants/types";
 
 export async function getActiveCompletedWorkoutsForWeek(
 	db: any,

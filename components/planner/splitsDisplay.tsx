@@ -1,11 +1,11 @@
-import RecordButton from "@/components/buttons/recordButton";
-import { definitions } from "@/constants/definitions";
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Split } from "@/constants/types";
-import { useSplitContext } from "@/contexts/splitContext";
 import { ChevronRight, Plus } from "lucide-react-native";
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import RecordButton from "../../components/buttons/recordButton";
+import { definitions } from "../../constants/definitions";
+import { spacing } from "../../constants/spacing";
+import { textSizes, textWeights } from "../../constants/text";
+import { Split } from "../../constants/types";
+import { useSplitContext } from "../../contexts/splitContext";
 import AdBanner from "../ads/adBanner";
 
 const { width, height } = Dimensions.get("window");

@@ -1,15 +1,15 @@
-import { useThemeContext } from "@/contexts/themeContext";
-import { SafeAreaView, StyleSheet, Dimensions, Text, View, ScrollView } from "react-native";
-import { spacing } from "../constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
 import { useSQLiteContext } from "expo-sqlite";
-import { useSplitContext } from "@/contexts/splitContext";
-import { useState, useEffect, useRef } from "react";
-import { Split } from "@/constants/types";
-import SplitsDisplay from "@/components/planner/splitsDisplay";
-import ScheduleEditor from "@/components/planner/scheduleEditor";
-import CreateNewSplit from "@/components/planner/createNewSplit";
-import SplitEditor from "@/components/planner/splitEditor";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
+import CreateNewSplit from "../components/planner/createNewSplit";
+import ScheduleEditor from "../components/planner/scheduleEditor";
+import SplitEditor from "../components/planner/splitEditor";
+import SplitsDisplay from "../components/planner/splitsDisplay";
+import { spacing } from "../constants/spacing";
+import { textSizes, textWeights } from "../constants/text";
+import { Split } from "../constants/types";
+import { useSplitContext } from "../contexts/splitContext";
+import { useThemeContext } from "../contexts/themeContext";
 
 const { width, height } = Dimensions.get("window");
 

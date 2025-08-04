@@ -1,4 +1,4 @@
-import { CompletedExerciseWithDate } from "@/constants/types";
+import { CompletedExerciseWithDate } from "../constants/types";
 
 export function formatExercisesChartData(
     data: CompletedExerciseWithDate[],

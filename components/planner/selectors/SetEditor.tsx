@@ -1,17 +1,17 @@
-import RecordButton from "@/components/buttons/recordButton";
-import DefaultInput from "@/components/inputs/defaultInput";
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Set } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { deleteSet } from "@/db/queries/sets/deleteSet";
-import { updateSet } from "@/db/queries/sets/updateSet";
-import { formatWeight } from "@/utilities/formatWeight";
-import { lbsToKg } from "@/utilities/lbsToKg";
 import { SQLiteDatabase } from "expo-sqlite";
 import { ChevronLeft, Trash2 } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { Dimensions, Pressable, ScrollView, Switch, Text, View } from "react-native";
+import RecordButton from "../../../components/buttons/recordButton";
+import DefaultInput from "../../../components/inputs/defaultInput";
+import { spacing } from "../../../constants/spacing";
+import { textSizes, textWeights } from "../../../constants/text";
+import { Set } from "../../../constants/types";
+import { useAppSettingsContext } from "../../../contexts/appSettingsContext";
+import { deleteSet } from "../../../db/queries/sets/deleteSet";
+import { updateSet } from "../../../db/queries/sets/updateSet";
+import { formatWeight } from "../../../utilities/formatWeight";
+import { lbsToKg } from "../../../utilities/lbsToKg";
 
 const { width } = Dimensions.get("window");
 

@@ -1,4 +1,4 @@
-import { exercises, workoutNameMap } from "@/constants/seeder_data";
+import { exercises, workoutNameMap } from "../../constants/seeder_data";
 
 export async function seedExercisesTable(db: any) {
 

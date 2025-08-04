@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Pressable, Text, StyleSheet, Vibration } from 'react-native';
-import { spacing } from '@/constants/spacing';
-import { useThemeContext } from '@/contexts/themeContext';
-import { textSizes, textWeights } from '@/constants/text';
 import { Clock } from 'lucide-react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, Vibration } from 'react-native';
+import { spacing } from '../../constants/spacing';
+import { textSizes, textWeights } from '../../constants/text';
+import { useThemeContext } from '../../contexts/themeContext';
 
 type RestTimerProps = {
   time: number;

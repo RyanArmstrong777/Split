@@ -1,16 +1,16 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';
-import { Split } from '@/constants/types';
-import { updateSplitName } from '@/db/queries/splits/updateSplitName';
-import { getWorkoutsBySplitId } from '@/db/queries/workouts/getWorkoutsBySplitId';
-import { getLastMonday } from '@/utilities/getLastMonday';
-import { createCompletedWorkout } from '@/db/queries/completed_workouts.tsx/createCompletedWorkout';
-import { getExercisesByWorkoutId } from '@/db/queries/exercises/getExercisesByWorkoutId';
-import { createCompletedExercise } from '@/db/queries/completed_exercises/createCompletedExercise';
-import { getSetsByExerciseId } from '@/db/queries/sets/getSetsByExerciseId';
-import { createCompletedSet } from '@/db/queries/completed_sets/createCompletedSet';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { Split } from '../constants/types';
+import { createCompletedExercise } from '../db/queries/completed_exercises/createCompletedExercise';
+import { createCompletedSet } from '../db/queries/completed_sets/createCompletedSet';
+import { createCompletedWorkout } from '../db/queries/completed_workouts.tsx/createCompletedWorkout';
+import { getExercisesByWorkoutId } from '../db/queries/exercises/getExercisesByWorkoutId';
+import { getSetsByExerciseId } from '../db/queries/sets/getSetsByExerciseId';
+import { getAllSplits } from '../db/queries/splits/getAllSplits';
+import { updateSplitName } from '../db/queries/splits/updateSplitName';
+import { getWorkoutsBySplitId } from '../db/queries/workouts/getWorkoutsBySplitId';
+import { getLastMonday } from '../utilities/getLastMonday';
 import { useAppSettingsContext } from './appSettingsContext';
-import { getAllSplits } from '@/db/queries/splits/getAllSplits';
 
 interface SplitContextProps {
   split: Split | null;

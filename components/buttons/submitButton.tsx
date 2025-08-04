@@ -1,8 +1,8 @@
 import React, { forwardRef, ReactNode } from "react";
-import { Pressable, Text, StyleSheet, ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, ViewStyle } from "react-native";
 import { spacing } from "../../constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Theme } from "@/constants/types";
+import { textSizes, textWeights } from "../../constants/text";
+import { Theme } from "../../constants/types";
 
 type SubmitButtonProps = {
     text?: string;

@@ -1,4 +1,4 @@
-import { CompletedSet } from "@/constants/types";
+import { CompletedSet } from "../../../constants/types";
 
 type props = {
     sets: CompletedSet[];

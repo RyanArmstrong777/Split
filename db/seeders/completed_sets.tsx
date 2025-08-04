@@ -1,5 +1,5 @@
-import { CompletedExercise } from "@/constants/types";
-import { exerciseSetConfigs } from "@/constants/seeder_data";
+import { exerciseSetConfigs } from "../../constants/seeder_data";
+import { CompletedExercise } from "../../constants/types";
 
 export async function seedCompletedSetsTable(db: any) {
     try {

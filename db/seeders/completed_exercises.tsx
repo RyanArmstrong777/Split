@@ -1,6 +1,5 @@
-import { exercises, workoutNameMap } from "@/constants/seeder_data";
-import { CompletedWorkout } from "@/constants/types";
-import { getLastMonday } from "@/utilities/getLastMonday";
+import { exercises, workoutNameMap } from "../../constants/seeder_data";
+import { getLastMonday } from "../../utilities/getLastMonday";
 
 type CompletedWorkoutWithName = {
     id: number;

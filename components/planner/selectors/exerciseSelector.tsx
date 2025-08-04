@@ -1,19 +1,19 @@
-import React, { useRef, useState, useEffect } from "react";
-import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
-import { ChevronRight, Plus, ChevronLeft, Trash2, Copy, ClipboardPaste, Check } from "lucide-react-native";
+import { Check, ChevronLeft, ChevronRight, ClipboardPaste, Copy, Plus, Trash2 } from "lucide-react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Dimensions, Pressable, ScrollView, Text, Vibration, View } from "react-native";
+import SubmitButton from "../../../components/buttons/submitButton";
+import DefaultInput from "../../../components/inputs/defaultInput";
+import { definitions } from "../../../constants/definitions";
+import { spacing } from "../../../constants/spacing";
+import { textSizes, textWeights } from "../../../constants/text";
+import { Exercise, Workout } from "../../../constants/types";
+import { useAppSettingsContext } from "../../../contexts/appSettingsContext";
+import { createExercise } from "../../../db/queries/exercises/createExercise";
+import { getExercisesByWorkoutId } from "../../../db/queries/exercises/getExercisesByWorkoutId";
+import { pasteExercise } from "../../../db/queries/exercises/pasteExercise";
+import { deleteWorkout } from "../../../db/queries/workouts/deleteWorkout";
+import { updateWorkoutName } from "../../../db/queries/workouts/updateWorkoutName";
 import RecordButton from "../../buttons/recordButton";
-import { textSizes, textWeights } from "@/constants/text";
-import { spacing } from "@/constants/spacing";
-import { Exercise, Workout } from "@/constants/types";
-import DefaultInput from "@/components/inputs/defaultInput";
-import SubmitButton from "@/components/buttons/submitButton";
-import { createExercise } from "@/db/queries/exercises/createExercise";
-import { definitions } from "@/constants/definitions";
-import { deleteWorkout } from "@/db/queries/workouts/deleteWorkout";
-import { getExercisesByWorkoutId } from "@/db/queries/exercises/getExercisesByWorkoutId";
-import { pasteExercise } from "@/db/queries/exercises/pasteExercise";
-import { updateWorkoutName } from "@/db/queries/workouts/updateWorkoutName";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
 
 type ExerciseSelectorProps = {
     theme: any

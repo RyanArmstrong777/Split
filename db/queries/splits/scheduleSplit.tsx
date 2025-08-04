@@ -1,5 +1,5 @@
-import { getLastMonday } from "@/utilities/getLastMonday";
-import { format, addDays } from "date-fns";
+import { addDays, format } from "date-fns";
+import { getLastMonday } from "../../../utilities/getLastMonday";
 
 export async function scheduleSplit(db: any, splitId: number, day: number): Promise<void> {
 	try {

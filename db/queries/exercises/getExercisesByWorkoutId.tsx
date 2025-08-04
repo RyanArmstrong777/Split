@@ -1,4 +1,4 @@
-import { Exercise } from "@/constants/types";
+import { Exercise } from "../../../constants/types";
 
 export async function getExercisesByWorkoutId(db: any, workoutId: number): Promise<Exercise[]> {
 

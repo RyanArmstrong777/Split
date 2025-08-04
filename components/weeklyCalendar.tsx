@@ -1,7 +1,7 @@
-import { View, Pressable, Text, StyleSheet, Dimensions } from "react-native";
-import { textSizes } from "../constants/text";
+import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { spacing } from "../constants/spacing";
-import { CalendarProps } from "@/constants/types";
+import { textSizes } from "../constants/text";
+import { CalendarProps } from "../constants/types";
 
 const { height } = Dimensions.get("window");
 

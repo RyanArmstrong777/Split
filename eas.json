@@ -13,7 +13,7 @@
     },
     "production": {
       "developmentClient": false,
-      "distribution": "app-store",
+      "distribution": "store",
       "autoIncrement": true,
       "ios": {
         "simulator": false

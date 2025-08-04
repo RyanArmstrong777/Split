@@ -1,8 +1,7 @@
-import { useEffect, useState, useCallback, useMemo } from "react";
-import { StyleSheet, Dimensions, SafeAreaView, Text, View, Pressable, ScrollView } from "react-native";
-import { useThemeContext } from "@/contexts/themeContext";
+import { Dimensions, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { spacing } from "../../constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
+import { textSizes, textWeights } from "../../constants/text";
+import { useThemeContext } from "../../contexts/themeContext";
 
 
 const { width, height } = Dimensions.get("window");

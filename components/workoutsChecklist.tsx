@@ -1,12 +1,12 @@
-import { ScrollView, StyleSheet, Dimensions, View } from "react-native";
-import { useState, useRef, useEffect, forwardRef } from "react";
-import { spacing } from "../constants/spacing";
 import { useSQLiteContext } from "expo-sqlite";
-import { CompletedExercise, CompletedSet, Theme, CompletedWorkout, Workout } from "@/constants/types";
-import { getWeightUnits } from "@/db/queries/app_settings/getWeightUnits";
+import { forwardRef, useEffect, useRef, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { spacing } from "../constants/spacing";
+import { CompletedExercise, CompletedSet, CompletedWorkout, Theme, Workout } from "../constants/types";
+import { getWeightUnits } from "../db/queries/app_settings/getWeightUnits";
 import ExercisesChecklist from "./checklist/exercisesChecklist";
-import SetsChecklist from "./checklist/setsChecklist";
 import SetDetails from "./checklist/setDetails";
+import SetsChecklist from "./checklist/setsChecklist";
 
 const { width } = Dimensions.get("window");
 

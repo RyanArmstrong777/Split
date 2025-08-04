@@ -1,16 +1,16 @@
-import RecordButton from "@/components/buttons/recordButton";
-import DefaultInput from "@/components/inputs/defaultInput";
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Exercise, Set } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { deleteExercise } from "@/db/queries/exercises/deleteExercise";
-import { updateExerciseName } from "@/db/queries/exercises/updateExerciseName";
-import { createSet } from "@/db/queries/sets/createSet";
-import { formatWeight } from "@/utilities/formatWeight";
 import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react-native";
 import React, { SetStateAction, useEffect, useState } from "react";
 import { Dimensions, Pressable, ScrollView, Text, Vibration, View } from "react-native";
+import RecordButton from "../../../components/buttons/recordButton";
+import DefaultInput from "../../../components/inputs/defaultInput";
+import { spacing } from "../../../constants/spacing";
+import { textSizes, textWeights } from "../../../constants/text";
+import { Exercise, Set } from "../../../constants/types";
+import { useAppSettingsContext } from "../../../contexts/appSettingsContext";
+import { deleteExercise } from "../../../db/queries/exercises/deleteExercise";
+import { updateExerciseName } from "../../../db/queries/exercises/updateExerciseName";
+import { createSet } from "../../../db/queries/sets/createSet";
+import { formatWeight } from "../../../utilities/formatWeight";
 
 const { width } = Dimensions.get("window");
 
@@ -57,6 +57,7 @@ const SetSelector: React.FC<SetSelectorProps> = ({
             Vibration.vibrate(200)
         }
         setRefreshExercises(!refreshExercises)
+        goToSection(1)
     }
 
     function handleSelectSet(set: Set) {

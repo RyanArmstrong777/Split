@@ -1,14 +1,14 @@
-import { definitions } from '@/constants/definitions';
-import { spacing } from '@/constants/spacing';
-import { textSizes, textWeights } from '@/constants/text';
-import { CompletedExercise, CompletedWorkout, Theme, Workout } from '@/constants/types';
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
-import { createCompletedExercise } from '@/db/queries/completed_exercises/createCompletedExercise';
-import { getActiveCompletedExercisesForDate } from '@/db/queries/completed_exercises/getActiveCompletedExercisesForDate';
 import { SQLiteDatabase } from 'expo-sqlite';
 import { Check, ChevronLeft, ChevronRight, Pencil, Plus } from 'lucide-react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dimensions, Pressable, ScrollView, Text, View } from 'react-native';
+import { definitions } from '../../constants/definitions';
+import { spacing } from '../../constants/spacing';
+import { textSizes, textWeights } from '../../constants/text';
+import { CompletedExercise, CompletedWorkout, Theme, Workout } from '../../constants/types';
+import { useAppSettingsContext } from '../../contexts/appSettingsContext';
+import { createCompletedExercise } from '../../db/queries/completed_exercises/createCompletedExercise';
+import { getActiveCompletedExercisesForDate } from '../../db/queries/completed_exercises/getActiveCompletedExercisesForDate';
 import AdBanner from '../ads/adBanner';
 import RecordButton from '../buttons/recordButton';
 import SubmitButton from '../buttons/submitButton';
@@ -85,9 +85,12 @@ const ExercisesChecklist = ({theme, db, selectedWorkout, goToPage, splitId, refr
                     </Pressable>
                 </RecordButton>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <RecordButton theme={theme} style={{justifyContent: "center", flexShrink: 1}}>
-                        <AdBanner style={{marginVertical: spacing.md}} id={"ca-app-pub-9362350160554339/8051360690"}/>
-                    </RecordButton>
+                    {settings?.removeAds === 0 && (
+                        <RecordButton theme={theme} style={{justifyContent: "center", flexShrink: 1}}>
+                            <AdBanner style={{marginVertical: spacing.md}} id={"ca-app-pub-9362350160554339/8051360690"}/>
+                        </RecordButton>
+                    )}
+                    
                     {exercises.map((exercise, index) => (
                         <RecordButton
                             key={index}

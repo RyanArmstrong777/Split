@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, Dimensions } from 'react-native';
-import { useSharedValue, runOnJS } from 'react-native-reanimated';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, Easing, StyleSheet, Text, View } from 'react-native';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import { runOnJS, useSharedValue } from 'react-native-reanimated';
+import { quotes } from '..//constants/quotes';
+import { spacing } from '..//constants/spacing';
+import { CompletedWorkout, Theme, Workout } from '..//constants/types';
+import { getDateAsDayNumber } from '..//utilities/getDateAsDayNumber';
+import { getWeek } from '..//utilities/getWeek';
 import { textSizes, textWeights } from '../constants/text';
-import { Theme } from '@/constants/types';
-import { quotes } from '@/constants/quotes';
-import { spacing } from '@/constants/spacing';
-import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { getDateAsDayNumber } from '@/utilities/getDateAsDayNumber';
-import { getWeek } from '@/utilities/getWeek';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { CompletedWorkout, Workout } from '@/constants/types';
 
 const SWIPE_THRESHOLD = 50;
 

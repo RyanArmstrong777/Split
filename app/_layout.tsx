@@ -1,12 +1,13 @@
-import Navbar from "@/components/navbar";
-import ThemedBackground from "@/components/themedBackground";
-import { AppSettingsProvider } from "@/contexts/appSettingsContext";
-import { SplitProvider } from "@/contexts/splitContext";
-import { ThemeProvider } from "@/contexts/themeContext";
-import runSeeder from "@/db/seeder";
 import { Tabs } from "expo-router";
 import { SQLiteProvider } from "expo-sqlite";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Navbar from "../components/navbar";
+import ThemedBackground from "../components/themedBackground";
+import { AppSettingsProvider } from "../contexts/appSettingsContext";
+import { SplitProvider } from "../contexts/splitContext";
+import { ThemeProvider } from "../contexts/themeContext";
+import runSeeder from "../db/seeder";
 
 function InnerApp() {
 
@@ -44,7 +45,7 @@ export default function RootLayout() {
         <SQLiteProvider
             databaseName="pushpump.db"
             options={{ useNewConnection: false }}
-            onInit={async (db) => {
+            onInit={async (db: any) => {
                 try {
                     await runSeeder(db);
                 } catch (e) {
@@ -53,6 +54,7 @@ export default function RootLayout() {
             }}
         >
             <InnerApp />
+            
         </SQLiteProvider>
     );
 }

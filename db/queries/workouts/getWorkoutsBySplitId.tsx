@@ -1,6 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { getWeek } from "@/utilities/getWeek";
-import { Workout } from "@/constants/types";
+import { Workout } from "../../../constants/types";
 
 export async function getWorkoutsBySplitId(db: SQLiteDatabase, splitId: number): Promise<Workout[]> {
 

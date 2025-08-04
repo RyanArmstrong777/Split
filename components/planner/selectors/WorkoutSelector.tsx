@@ -1,19 +1,19 @@
-import React, { useRef, useState, forwardRef, useImperativeHandle, useEffect } from "react";
-import { ScrollView, Text, Dimensions, View, Pressable, Vibration } from "react-native";
-import { Plus, ChevronRight, ChevronLeft, Copy, ClipboardPaste, Check } from "lucide-react-native";
-import RecordButton from "../../buttons/recordButton";
-import { textSizes, textWeights } from "@/constants/text";
-import { spacing } from "@/constants/spacing";
-import { getDateAsDayNumber } from "@/db/utilities/getDateAsDayNumber";
-import { Split, Workout } from "@/constants/types";
-import DefaultInput from "@/components/inputs/defaultInput";
-import SubmitButton from "@/components/buttons/submitButton";
-import { createWorkout } from "@/db/queries/workouts/createWorkout";
 import { SQLiteDatabase } from "expo-sqlite";
-import { getWorkoutsOnDay } from "@/db/queries/workouts/getWorkoutsOnDay";
-import { definitions } from "@/constants/definitions";
-import { pasteWorkout } from "@/db/queries/workouts/pasteWorkout";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
+import { Check, ChevronLeft, ChevronRight, ClipboardPaste, Copy, Plus } from "lucide-react-native";
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { Dimensions, Pressable, ScrollView, Text, Vibration, View } from "react-native";
+import SubmitButton from "../../../components/buttons/submitButton";
+import DefaultInput from "../../../components/inputs/defaultInput";
+import { definitions } from "../../../constants/definitions";
+import { spacing } from "../../../constants/spacing";
+import { textSizes, textWeights } from "../../../constants/text";
+import { Split, Workout } from "../../../constants/types";
+import { useAppSettingsContext } from "../../../contexts/appSettingsContext";
+import { createWorkout } from "../../../db/queries/workouts/createWorkout";
+import { getWorkoutsOnDay } from "../../../db/queries/workouts/getWorkoutsOnDay";
+import { pasteWorkout } from "../../../db/queries/workouts/pasteWorkout";
+import { getDateAsDayNumber } from "../../../db/utilities/getDateAsDayNumber";
+import RecordButton from "../../buttons/recordButton";
 
 type props = {
     db: SQLiteDatabase

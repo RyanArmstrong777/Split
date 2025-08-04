@@ -1,4 +1,4 @@
-import { exerciseSetConfigs } from "@/constants/seeder_data";
+import { exerciseSetConfigs } from "../../constants/seeder_data";
 
 export async function seedSetsTable(db: any) {
 

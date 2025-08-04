@@ -1,12 +1,12 @@
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { Exercise, Set, Split, Theme, Workout } from "@/constants/types";
-import { useAppSettingsContext } from "@/contexts/appSettingsContext";
-import { getSetsByExerciseId } from "@/db/queries/sets/getSetsByExerciseId";
-import { getLastMonday } from "@/utilities/getLastMonday";
 import { ChevronLeft } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { spacing } from "../../constants/spacing";
+import { textSizes, textWeights } from "../../constants/text";
+import { Exercise, Set, Split, Theme, Workout } from "../../constants/types";
+import { useAppSettingsContext } from "../../contexts/appSettingsContext";
+import { getSetsByExerciseId } from "../../db/queries/sets/getSetsByExerciseId";
+import { getLastMonday } from "../../utilities/getLastMonday";
 import AdBanner from "../ads/adBanner";
 import RecordButton from "../buttons/recordButton";
 import WeeklyCalendar from "../weeklyCalendar";

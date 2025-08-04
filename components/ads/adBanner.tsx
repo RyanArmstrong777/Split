@@ -1,6 +1,6 @@
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
 import { StyleProp, View, ViewStyle } from 'react-native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import { useAppSettingsContext } from '../../contexts/appSettingsContext';
 
 interface AdBannerProps {
   style?: StyleProp<ViewStyle>;

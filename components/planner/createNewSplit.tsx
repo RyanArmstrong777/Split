@@ -1,10 +1,10 @@
-import { definitions } from "@/constants/definitions";
-import { spacing } from "@/constants/spacing";
-import { textSizes, textWeights } from "@/constants/text";
-import { createSplit } from "@/db/queries/splits/createSplit";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { definitions } from "../../constants/definitions";
+import { spacing } from "../../constants/spacing";
+import { textSizes, textWeights } from "../../constants/text";
+import { createSplit } from "../../db/queries/splits/createSplit";
 import AdBanner from "../ads/adBanner";
 import RecordButton from "../buttons/recordButton";
 import SubmitButton from "../buttons/submitButton";
@@ -88,7 +88,7 @@ const CreateNewSplit: React.FC<Props> = ({
                 style={{ borderBottomWidth: 0, marginTop: "auto", marginBottom: spacing.lg, flexDirection: "column" }}
             >
 
-                <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}}/>
+                <AdBanner style={{alignItems: "center", width: "100%", paddingVertical: spacing.sm}} id={"ca-app-pub-9362350160554339~7121422401"}/>
                 
                 <SubmitButton theme={theme} text={"Create split"} onPress={() => handleCreateNewSplit()} />
             </RecordButton>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ViewStyle } from 'react-native';
-import { useThemeContext } from '@/contexts/themeContext';
+import { useThemeContext } from '../contexts/themeContext';
 
 type ThemedBackgroundProps = {
   children: React.ReactNode;

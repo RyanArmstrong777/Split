@@ -1,4 +1,4 @@
-import { AppSettings } from '@/constants/types';
+import { AppSettings } from '../../../constants/types';
 
 export async function getAppSettings(db: any): Promise<AppSettings | null> {
     try {

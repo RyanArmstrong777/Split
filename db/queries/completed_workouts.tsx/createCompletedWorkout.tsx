@@ -1,5 +1,5 @@
 import { SQLiteDatabase } from "expo-sqlite";
-import { CompletedWorkout } from "@/constants/types";
+import { CompletedWorkout } from "../../../constants/types";
 
 export async function createCompletedWorkout(db: SQLiteDatabase, workoutId: number, start_date: string): Promise<CompletedWorkout | null> {
     const query = `

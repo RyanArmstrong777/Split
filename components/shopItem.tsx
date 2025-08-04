@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
-import RecordButton from './buttons/recordButton';
-import { spacing } from '@/constants/spacing';
-import { textSizes, textWeights } from '@/constants/text';
-import { ShopProduct } from '@/constants/types';
-import { setItemPurchased } from '@/db/queries/shop/setItemPurchased';
 import { useSQLiteContext } from 'expo-sqlite';
-import { useAppSettingsContext } from '@/contexts/appSettingsContext';
-import * as InAppPurchases from 'expo-in-app-purchases';
+import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { spacing } from '../constants/spacing';
+import { textSizes, textWeights } from '../constants/text';
+import { ShopProduct } from '../constants/types';
+import { useAppSettingsContext } from '../contexts/appSettingsContext';
+import { setItemPurchased } from '../db/queries/shop/setItemPurchased';
+import RecordButton from './buttons/recordButton';
 
 type Props = {
     item: ShopProduct;

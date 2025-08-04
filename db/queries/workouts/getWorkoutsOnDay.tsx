@@ -1,4 +1,4 @@
-import { Workout } from "@/constants/types";
+import { Workout } from "../../../constants/types";
 
 export async function getWorkoutsOnDay(db: any, split_id: number, day: number): Promise<Workout[]> {
 
