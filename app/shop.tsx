@@ -1,11 +1,7 @@
-import * as InAppPurchases from 'expo-in-app-purchases';
 import { useSQLiteContext } from "expo-sqlite";
-import { ChevronLeft } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import RecordButton from "../components/buttons/recordButton";
+import { Dimensions, ScrollView, StyleSheet, Text, View, Image } from "react-native";
 import SubmitButton from "../components/buttons/submitButton";
-import ShopItemCard from "../components/shopItem";
 import { spacing } from "../constants/spacing";
 import { textSizes, textWeights } from "../constants/text";
 import { ShopProduct } from "../constants/types";
@@ -32,13 +28,6 @@ export default function AnalyticsScreen() {
         mainRef.current?.scrollTo({x: item ? width : 0})
     }
 
-    useEffect(() => {
-        InAppPurchases.connectAsync();
-        return () => {
-            InAppPurchases.disconnectAsync();
-        };
-    }, []);
-
     const [selectedItem, setSelectedItem] = useState<ShopProduct | null>(null)
 
     useEffect(() => {
@@ -47,82 +36,16 @@ export default function AnalyticsScreen() {
     
     return (
         <View style={{ backgroundColor: theme.background, flex: 1 }}>
-            <View style={{padding: spacing.lg, paddingHorizontal: spacing.lg * 2, gap: spacing.sm}}>
+            <View style={{padding: spacing.lg, paddingHorizontal: spacing.lg * 2, gap: spacing.sm, justifyContent: "center", alignItems: "center", flex: 1}}>
+                <Image source={require('../assets/images/logo.png')} style={{aspectRatio: 1, width: "100%", alignItems: "center"}}/>
                 <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>
-                    Shop
+                    Remove ads
                 </Text>
-                <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular}}>
-                    Purchase splits used by your favourite athletes!
+                <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, alignItems: "center"}}>
+                    Enjoy the app? Make the experience better by removing those pesky distractions!
                 </Text>
-                <SubmitButton theme={theme} onPress={() => handleBuy('remove_ads')} text="Remove ads - £4.99" style={{marginTop: spacing.sm}} />
+                <SubmitButton theme={theme} onPress={() => {}} text="£4.99" /> 
             </View>
-            <ScrollView style={{flex: 1}} horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={mainRef} scrollEnabled={false}>
-                <ScrollView style={{width}} showsVerticalScrollIndicator={false} contentContainerStyle={{paddingHorizontal: spacing.lg, gap: spacing.sm}}>
-                    {items?.map((item, index) => (
-                        <View key={index}>
-                            <ShopItemCard item={item} theme={theme} viewShopItem={viewShopItem} purchaseFunction={handleBuy}/>
-                        </View>
-                    ))}
-                </ScrollView>
-                <View style={{width, flex: 1, paddingHorizontal: spacing.lg, gap: spacing.lg}}>
-                    <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg, paddingVertical: spacing.md}} onPress={() => viewShopItem(null)}>
-                        <ChevronLeft size={textSizes.md} color={theme.text}/>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold, marginRight: "auto"}}>
-                            Back
-                        </Text>
-                    </RecordButton>
-                    <View style={{ flex: 1, paddingBottom: spacing.lg, gap: spacing.lg }}>
-                        <ScrollView contentContainerStyle={{paddingHorizontal: spacing.lg, gap: spacing.md}} style={{flex: 1}} showsVerticalScrollIndicator={false}>
-                            <Text style={{ fontSize: textSizes.lg, color: theme.text, fontWeight: textWeights.bold }}>
-                                {selectedItem?.title}
-                            </Text>
-                            <View style={{gap: spacing.sm}}>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold }}>
-                                    Description
-                                </Text>
-                                <Text
-                                    style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light }}
-                                >
-                                    {selectedItem?.description}
-                                </Text>
-                            </View>
-
-                            <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light }}>
-                                Note: adjust weight to facilitate your capabilities
-                            </Text>
-                            
-                            <View style={{gap: spacing.sm}}>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold }}>
-                                    Focus
-                                </Text>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light }}>
-                                    - {selectedItem?.focus}
-                                </Text>
-                            </View>
-                            
-                            <View style={{gap: spacing.sm}}>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold }}>
-                                    Difficulty
-                                </Text>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light }}>
-                                    - {selectedItem?.difficulty}
-                                </Text>
-                            </View>
-
-                            <View style={{gap: spacing.sm}}>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold }}>
-                                    What's included?
-                                </Text>
-                                <Text style={{ fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light }}>
-                                    - 1 Gym plan
-                                </Text>
-                            </View>
-
-                        </ScrollView>
-                        <SubmitButton style={{marginTop: 0}} theme={theme} onPress={() => (selectedItem?.purchased === 1 || !selectedItem) ? {} : purchaseItem(selectedItem.id)} text={(selectedItem?.purchased === 1) ? "Purchased" : `+ £${selectedItem?.price}`} />
-                    </View>
-                </View>
-            </ScrollView>
         </View>
     );
 }

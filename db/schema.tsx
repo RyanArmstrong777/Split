@@ -105,20 +105,6 @@ export async function createTables(db: any) {
             );
         `);
 
-        await db.execAsync(`
-            CREATE TABLE IF NOT EXISTS shop_products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                title TEXT NOT NULL,
-                description TEXT,
-                difficulty TEXT,
-                focus TEXT,
-                price REAL NOT NULL,
-                sale_price REAL,
-                seeder TEXT,
-                purchased BOOLEAN NOT NULL
-            );
-        `);
-
         await db.execAsync(`CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT)`);
 
         await db.execAsync('COMMIT');

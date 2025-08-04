@@ -1,36 +1,19 @@
 {
   "expo": {
-    "name": "PushPump",
+    "name": "Split",
     "slug": "PushPump",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo.png",
     "scheme": "pushpump",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
-      "usesAppleSignIn": false,
       "supportsTablet": true,
       "bundleIdentifier": "com.armsydev777.Split",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      },
-      "entitlements": {
-        "com.apple.InAppPurchase": ["Default"]
       }
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "com.armsydev777.Split"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/logo.png"
     },
     "plugins": [
       "expo-router",
