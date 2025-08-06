@@ -158,8 +158,8 @@ export default function AnalyticsScreen() {
         <View style={{ backgroundColor: theme.background, flex: 1 }}>
             <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} ref={editRef} scrollEnabled={false}>
                 <View style={{flex: 1}}>
-                    <View style={[styles.container, {paddingHorizontal: spacing.lg * 2, flex: 0}]}>
-                        <View style={{flexDirection: "row", paddingTop: spacing.lg, flex: 1}}>
+                    <View style={[styles.container, {paddingHorizontal: spacing.lg * 2}]}>
+                        <View style={{flexDirection: "row", paddingTop: spacing.lg, flex: 0}}>
                             <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold}}>Analytics</Text>
                             <DateTimePicker
                                 value={new Date(startDate)}
@@ -353,16 +353,16 @@ const styles = StyleSheet.create({
         paddingHorizontal: spacing.lg,
         paddingTop: spacing.lg,
         gap: spacing.sm,
-        flex: 1
+        flex: 0,
     },
     timeframeContainer: {
-        flexDirection: "row"
+        flexDirection: "row",
     },
     timeframe: {
         paddingVertical: spacing.sm,
         paddingHorizontal: spacing.md,
         borderRadius: spacing.md,
-        flex: 1,
+        flex: 0,
         alignItems: "center"
     },
     section: {

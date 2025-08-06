@@ -1,30 +1,16 @@
-import * as InAppPurchases from 'expo-in-app-purchases'
-import { useFocusEffect } from "expo-router"
 import { useSQLiteContext } from "expo-sqlite"
-import { Bell, Check, ChevronLeft, ChevronRight, Dumbbell, Eraser, Moon, RefreshCw, ShoppingCart, Vibrate } from "lucide-react-native"
-import { useCallback, useEffect, useRef, useState } from "react"
-import { Dimensions, Pressable, ScrollView, StyleSheet, Switch, Text, Vibration, View } from "react-native"
+import { Bell, Check, Dumbbell, Eraser, Moon, RefreshCw, Vibrate } from "lucide-react-native"
+import { useEffect, useRef, useState } from "react"
+import { Dimensions, ScrollView, StyleSheet, Switch, Text, Vibration, View } from "react-native"
+import Purchases, { PurchasesPackage } from 'react-native-purchases'
 import AdBanner from "../components/ads/adBanner"
 import RecordButton from "../components/buttons/recordButton"
-import ShopItemCard from "../components/shopItem"
 import { spacing } from "../constants/spacing"
 import { textSizes, textWeights } from "../constants/text"
-import { ShopProduct } from "../constants/types"
 import { useAppSettingsContext } from "../contexts/appSettingsContext"
 import { useThemeContext } from "../contexts/themeContext"
 import { removeAds } from "../db/queries/app_settings/removeAds"
-import { getAllProducts } from "../db/queries/shop/getAllProducts"
 import runSeeder from "../db/seeder"
-import { seedArnoldSplit } from "../db/seeders/shop_products/ArnoldSchwarzenegger"
-import { seedChrisBumsteadSplit } from "../db/seeders/shop_products/ChrisBumstead"
-import { seedDavidLaidSplit } from "../db/seeders/shop_products/DavidLaid"
-import { seedGregDoucetteSplit } from "../db/seeders/shop_products/GregDoucette"
-import { seedJeffCavaliereSplit } from "../db/seeders/shop_products/JeffCavaliere"
-import { seedJeffNippardSplit } from "../db/seeders/shop_products/JeffNippard"
-import { seedJeremyEthierSplit } from "../db/seeders/shop_products/JeremyEthier"
-import { seedNickWalkerSplit } from "../db/seeders/shop_products/NickWalker"
-import { seedOmarIsufSplit } from "../db/seeders/shop_products/OmarIsuf"
-import { seedSamSulekSplit } from "../db/seeders/shop_products/SamSulek"
 import deleteTables from "../db/utilities/deleteTables"
 
 const { width } = Dimensions.get("window")
@@ -44,8 +30,6 @@ export default function SettingsScreen() {
     const [notifications, setNotifications] = useState(false)
     const [vibrationFeedback, setVibrationFeedback] = useState(false)
     const [isResetting, setIsResetting] = useState(false)
-
-    const [items, setItems] = useState<ShopProduct[] | null>(null)
 
     useEffect(() => {
         if (settings) {
@@ -95,73 +79,39 @@ export default function SettingsScreen() {
             setIsResetting(false)
         }, 800)
     }
+
+    const [purchasePackage, setPurchasePackage] = useState<PurchasesPackage | null>(null)
     
-    function viewPurchases(value: boolean) {
-        mainRef.current?.scrollTo({x: value ? width : 0})
-    }
-
-    async function getShopProducts() {
-        const products = await getAllProducts(db)
-        setItems(products)
-    }
-    
-    useFocusEffect(
-        useCallback(() => {
-            getShopProducts()
-        }, [refreshKey])
-    );
-
-    const handleRestorePurchases = async () => {
-        try {
-            const { responseCode, results } = await InAppPurchases.getPurchaseHistoryAsync();
-
-            if (responseCode === InAppPurchases.IAPResponseCode.OK && results) {
-                for (const purchase of results) {
-                    if (!purchase.acknowledged) {
-                        switch (purchase.productId) {
-                            case 'remove_ads':
-                                removeAds(db);
-                                break;
-                            case 'arnold_inspired':
-                                seedArnoldSplit(db);
-                                break;
-                            case 'cbum_inspired':
-                                seedChrisBumsteadSplit(db);
-                                break;
-                            case 'david_laid_inspired':
-                                seedDavidLaidSplit(db);
-                                break;
-                            case 'greg_doucette_inspired':
-                                seedGregDoucetteSplit(db);
-                                break;
-                            case 'jeff_cavaliere_inspired':
-                                seedJeffCavaliereSplit(db);
-                                break;
-                            case 'jeff_nippard_inspired':
-                                seedJeffNippardSplit(db);
-                                break;
-                            case 'jeremy_ethier_inspired':
-                                seedJeremyEthierSplit(db);
-                                break;
-                            case 'nick_walker_inspired':
-                                seedNickWalkerSplit(db);
-                                break;
-                            case 'omar_isuf_inspired':
-                                seedOmarIsufSplit(db);
-                                break;
-                            case 'sam_sulek_inspired':
-                                seedSamSulekSplit(db);
-                                break;
-                        }
-
-                        await InAppPurchases.finishTransactionAsync(purchase, true);
-                    }
+    useEffect(() => {
+        const fetchOffering = async () => {
+            try {
+                const offerings = await Purchases.getOfferings()
+                const pkg = offerings.current?.availablePackages[0]
+                if (pkg) {
+                    setPurchasePackage(pkg)
+                    console.log(offerings)
                 }
+            } catch (error) {
+                console.log("No IAPs found")
+            }
+        }
+        fetchOffering()
+    }, [])
+
+    async function restorePurchases() {
+        try {
+            const customerInfo = await Purchases.restorePurchases();
+            const pids = customerInfo.allPurchasedProductIdentifiers;
+
+            if (pids.includes("prodf6f62963e8")) {
+                removeAds(db);
+            } else {
+                console.warn("Restored purchases, but expected product ID not found.");
             }
         } catch (error) {
-            console.error('Restore error:', error);
+            console.error("Restore failed:", error);
         }
-    };
+    }
 
     return (
         <View style={{backgroundColor: theme.background, flex: 1}}>
@@ -197,14 +147,7 @@ export default function SettingsScreen() {
                             </Text>
                             <Switch value={vibrationFeedback} onValueChange={() => handleSetVibrationFeedback()} />
                         </RecordButton>
-                        <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg, paddingVertical: spacing.md}} onPress={() => viewPurchases(true)}>
-                            <ShoppingCart size={textSizes.md} color={theme.text}/>
-                            <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, marginRight: "auto"}}>
-                                View Purchases
-                            </Text>
-                            <ChevronRight size={textSizes.md} color={theme.text}/>
-                        </RecordButton>
-                        <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg, paddingVertical: spacing.md}} onPress={() => handleRestorePurchases()}>
+                        <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg, paddingVertical: spacing.md}} onPress={() => restorePurchases()}>
                             <RefreshCw size={textSizes.md} color={theme.text}/>
                             <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, marginRight: "auto"}}>
                                 Restore Purchases
@@ -220,27 +163,6 @@ export default function SettingsScreen() {
                                 Reset App
                             </Text>
                         </RecordButton>
-                    </ScrollView>
-                </View>
-                <View style={[styles.container, {backgroundColor: theme.background, gap: 0}]}>
-                    <RecordButton theme={theme} style={{paddingHorizontal: spacing.lg}}>
-                        <Pressable onPress={() => viewPurchases(false)} style={{paddingVertical: spacing.md}}>
-                            <ChevronLeft size={textSizes.md} color={theme.text}/>
-                        </Pressable>
-                        <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.bold, marginRight: "auto"}}>
-                            Purchases
-                        </Text>
-                    </RecordButton>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        {items?.filter(item => item.purchased === 1).map((item) => (
-                            <View key={item.id}>
-                                <ShopItemCard
-                                    item={item}
-                                    theme={theme}
-                                    showPrice={true}
-                                />
-                            </View>
-                        ))}
                     </ScrollView>
                 </View>
             </ScrollView>

@@ -8,7 +8,6 @@ import { seedCompletedSetsTable } from "./seeders/completed_sets";
 import { seedCompletedWorkoutsTable } from "./seeders/completed_workouts";
 import { seedExercisesTable } from "./seeders/exercises";
 import { seedSetsTable } from "./seeders/sets";
-import { seedShopProducts } from "./seeders/shop_products";
 import { seedSplitsTable } from "./seeders/splits";
 import { seedWorkoutsTable } from "./seeders/workouts";
 
@@ -32,7 +31,6 @@ export default async function runSeeder(db: any) {
             await seedSplitsTable(db);
 
             await seedAppSettingsTable(db);
-            await db.runAsync(`UPDATE app_settings SET current_split_id = ? WHERE id = 1`, [1]);
 
             await seedWorkoutsTable(db);
             await seedExercisesTable(db);
@@ -43,8 +41,6 @@ export default async function runSeeder(db: any) {
             await seedCompletedSetsTable(db);
 
             await seedBodyMetricsTable(db);
-
-            await seedShopProducts(db);
 
             await setSeeded(db)
             

@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { ChartNoAxesColumnIncreasing, Dumbbell, NotebookPen, Settings, ShoppingBag } from 'lucide-react-native';
+import { ChartNoAxesColumnIncreasing, Dumbbell, MegaphoneOff, NotebookPen, Settings } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, View } from 'react-native';
 import { darkTheme } from '../constants/colors';
@@ -34,7 +34,7 @@ export default function Navbar() {
                 ]}
                 onPress={() => setActiveTab("shop")}
             >
-                <ShoppingBag size={textSizes.lg} color={theme.text} />
+                <MegaphoneOff size={textSizes.lg} color={theme.text} />
             </Pressable>
 
             <View style={[

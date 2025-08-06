@@ -1,6 +1,7 @@
 import { useSQLiteContext } from "expo-sqlite";
 import { useEffect, useRef, useState } from "react";
-import { Dimensions, ScrollView, StyleSheet, Text, View, Image } from "react-native";
+import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import Purchases, { LOG_LEVEL, PurchasesPackage } from 'react-native-purchases';
 import SubmitButton from "../components/buttons/submitButton";
 import { spacing } from "../constants/spacing";
 import { textSizes, textWeights } from "../constants/text";
@@ -8,13 +9,14 @@ import { ShopProduct } from "../constants/types";
 import { useAppSettingsContext } from "../contexts/appSettingsContext";
 import { useSplitContext } from "../contexts/splitContext";
 import { useThemeContext } from "../contexts/themeContext";
+import { removeAds } from "../db/queries/app_settings/removeAds";
 
 const { width, height } = Dimensions.get("window");
 
 export default function AnalyticsScreen() {
 
     const { theme } = useThemeContext()
-    const { refreshKey, triggerRefresh } = useAppSettingsContext();
+    const { refreshKey, triggerRefresh, settings } = useAppSettingsContext();
     const { split } = useSplitContext()
     const db = useSQLiteContext()
 
@@ -33,18 +35,65 @@ export default function AnalyticsScreen() {
     useEffect(() => {
         viewShopItem(selectedItem)
     }, [selectedItem])
+
+    useEffect(() => {
+        Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+
+        if (Platform.OS === 'ios') {
+            Purchases.configure({apiKey: "appl_IazrpTPhcwtllpcaCDausmHqJQH"});
+        }
+    }, []);
+
+    const [purchasePackage, setPurchasePackage] = useState<PurchasesPackage | null>(null)
+
+    useEffect(() => {
+        const fetchOffering = async () => {
+            try {
+                const offerings = await Purchases.getOfferings()
+                const pkg = offerings.current?.availablePackages[0]
+                if (pkg) {
+                    setPurchasePackage(pkg)
+                    console.log(offerings)
+                }
+            } catch (error) {
+                console.log("No IAPs found")
+            }
+        }
+        fetchOffering()
+    }, [])
+
+    const handlePurchase = async () => {
+        if (!purchasePackage) return;
+
+        try {
+            const customerInfo = await Purchases.purchasePackage(purchasePackage);
+            const pids = customerInfo.customerInfo.allPurchasedProductIdentifiers;
+
+            if (pids.includes("prodf6f62963e8")) {
+                removeAds(db);
+            } else {
+                console.warn("Purchase completed, but expected product ID not found.");
+            }
+        } catch (error) {
+            console.error("Purchase failed:", error);
+        }
+    };
     
     return (
-        <View style={{ backgroundColor: theme.background, flex: 1 }}>
-            <View style={{padding: spacing.lg, paddingHorizontal: spacing.lg * 2, gap: spacing.sm, justifyContent: "center", alignItems: "center", flex: 1}}>
-                <Image source={require('../assets/images/logo.png')} style={{aspectRatio: 1, width: "100%", alignItems: "center"}}/>
-                <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>
-                    Remove ads
-                </Text>
-                <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, alignItems: "center"}}>
-                    Enjoy the app? Make the experience better by removing those pesky distractions!
-                </Text>
-                <SubmitButton theme={theme} onPress={() => {}} text="£4.99" /> 
+        <View style={{ backgroundColor: theme.background, flex: 1, padding: spacing.lg }}>
+            <View style={{gap: spacing.sm, flex: 1, justifyContent: "center", alignItems: "center"}}>
+                <View style={{paddingHorizontal: spacing.lg, justifyContent: "center", alignItems: "center", gap: spacing.sm}}>
+                    <Image source={require('../assets/images/logo_cropped.png')} style={{width: width - spacing.lg * 4, height: (width - spacing.lg * 4) / 2, resizeMode: "contain"}}/>
+                    <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>
+                        Remove ads
+                    </Text>
+                    <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, textAlign: "center"}}>
+                        {settings?.removeAds === 1 ? "Thank you for helping out! it means a lot." : "Enjoy the app? Improve the experience by removing those pesky distractions!"}
+                    </Text>
+                </View>
+                <SubmitButton theme={theme} onPress={() => settings?.removeAds === 1 ? {} : handlePurchase()} text={settings?.removeAds === 1 ? "Purchased!" : "£4.99"} style={{marginTop: spacing.md}}/>
+                <Text style={{color: "white"}}>{purchasePackage?.toString()}</Text>
+                <Text style={{color: "white"}}>{settings?.removeAds}</Text>
             </View>
         </View>
     );
