@@ -69,8 +69,9 @@ export default function AnalyticsScreen() {
             const customerInfo = await Purchases.purchasePackage(purchasePackage);
             const pids = customerInfo.customerInfo.allPurchasedProductIdentifiers;
 
-            if (pids.includes("prodf6f62963e8")) {
+            if (pids.includes("com.armsydev777.Split.remove_ads")) {
                 removeAds(db);
+                triggerRefresh();
             } else {
                 console.warn("Purchase completed, but expected product ID not found.");
             }
@@ -85,15 +86,13 @@ export default function AnalyticsScreen() {
                 <View style={{paddingHorizontal: spacing.lg, justifyContent: "center", alignItems: "center", gap: spacing.sm}}>
                     <Image source={require('../assets/images/logo_cropped.png')} style={{width: width - spacing.lg * 4, height: (width - spacing.lg * 4) / 2, resizeMode: "contain"}}/>
                     <Text style={{fontSize: textSizes.title, color: theme.text, fontWeight: textWeights.bold, paddingTop: spacing.lg}}>
-                        Remove ads
+                        {settings?.removeAds === 1 ? "Ads removed!" : "Remove ads"}
                     </Text>
                     <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.regular, textAlign: "center"}}>
                         {settings?.removeAds === 1 ? "Thank you for helping out! it means a lot." : "Enjoy the app? Improve the experience by removing those pesky distractions!"}
                     </Text>
                 </View>
                 <SubmitButton theme={theme} onPress={() => settings?.removeAds === 1 ? {} : handlePurchase()} text={settings?.removeAds === 1 ? "Purchased!" : "£4.99"} style={{marginTop: spacing.md}}/>
-                <Text style={{color: "white"}}>{purchasePackage?.toString()}</Text>
-                <Text style={{color: "white"}}>{settings?.removeAds}</Text>
             </View>
         </View>
     );

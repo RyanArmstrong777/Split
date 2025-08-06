@@ -71,7 +71,7 @@ export async function createTables(db: any) {
             CREATE TABLE IF NOT EXISTS sets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 exercise_id INTEGER NOT NULL,
-                weight INTEGER,
+                weight REAL,
                 reps INTEGER,
                 time INTEGER,
                 \`order\` INTEGER,
@@ -83,7 +83,7 @@ export async function createTables(db: any) {
             CREATE TABLE IF NOT EXISTS completed_sets (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 completed_exercise_id INTEGER NOT NULL,
-                target_weight INTEGER,
+                target_weight REAL,
                 weight REAL,
                 target_reps INTEGER,
                 reps INTEGER,

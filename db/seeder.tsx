@@ -2,7 +2,6 @@ import { isSeeded } from "./queries/meta/isSeeded";
 import { setSeeded } from "./queries/meta/setSeeded";
 import { createTables } from "./schema";
 import { seedAppSettingsTable } from "./seeders/app_settings";
-import { seedBodyMetricsTable } from "./seeders/body_metrics";
 import { seedCompletedExercisesTable } from "./seeders/completed_exercises";
 import { seedCompletedSetsTable } from "./seeders/completed_sets";
 import { seedCompletedWorkoutsTable } from "./seeders/completed_workouts";
@@ -39,8 +38,6 @@ export default async function runSeeder(db: any) {
             await seedCompletedWorkoutsTable(db);
             await seedCompletedExercisesTable(db);
             await seedCompletedSetsTable(db);
-
-            await seedBodyMetricsTable(db);
 
             await setSeeded(db)
             

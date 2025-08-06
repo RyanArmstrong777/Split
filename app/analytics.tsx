@@ -193,11 +193,11 @@ export default function AnalyticsScreen() {
                                     <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light}}>Body metrics</Text>
                                     <Text style={{fontSize: textSizes.md, color: theme.text, fontWeight: textWeights.bold, marginBottom: spacing.sm}}>
                                         {metric === "Weight" && bodyMetricsHistory?.at(-1)?.weight != null
-                                        ? `${bodyMetricsHistory?.at(-1)?.weight}${settings?.weightUnit === "kg" ? "kg" : "lbs"}`
+                                        ? `${bodyMetricsHistory?.at(-1)?.weight.toFixed(2)}${settings?.weightUnit === "kg" ? "kg" : "lbs"}`
                                         : metric === "BF%" && bodyMetricsHistory?.at(-1)?.bodyFatPercentage != null
-                                        ? `${bodyMetricsHistory?.at(-1)?.bodyFatPercentage}%`
+                                        ? `${bodyMetricsHistory?.at(-1)?.bodyFatPercentage.toFixed(2)}%`
                                         : metric === "BMI" && bodyMetricsHistory?.at(-1)?.BMI != null
-                                        ? bodyMetricsHistory?.at(-1)?.BMI.toFixed(1)
+                                        ? bodyMetricsHistory?.at(-1)?.BMI.toFixed(2)
                                         : "N/A"}
                                     </Text>
                                     <View style={{flexDirection: "row", gap: spacing.sm}}>
@@ -234,7 +234,7 @@ export default function AnalyticsScreen() {
                                 <RecordButton theme={theme} style={styles.section}>
                                     <Text style={{fontSize: textSizes.sm, color: theme.text, fontWeight: textWeights.light}}>{selectedExercise} volume</Text>
                                     <Text style={{fontSize: textSizes.md, color: theme.text, fontWeight: textWeights.regular, marginBottom: spacing.sm}}>
-                                        {exercisesChartData.volume && exercisesChartData?.volume > 0 ? `${exercisesChartData?.volume} ${settings?.weightUnit}` : 'N/A'}
+                                        {exercisesChartData.volume && exercisesChartData?.volume > 0 ? `${exercisesChartData?.volume.toFixed(2)} ${settings?.weightUnit}` : 'N/A'}
                                     </Text>
                                 </RecordButton>
                             </View>
